@@ -99,10 +99,79 @@
       </div>
     </section>
 
-    <!-- 4.3. Placeholder para “Gastos” -->
-    <section id="gastos" class="tab-content">
-      <!-- Aquí irá el formulario de gastos en el próximo paso -->
-    </section>
+    <!-- 4.3. Sección “Gastos” -->
+<section id="gastos" class="tab-content">
+  <h2>Registrar Gastos</h2>
+
+  <!-- 4.3.1. Saldo Restante -->
+  <div class="card saldo-restante">
+    <p>Saldo restante:</p>
+    <p id="display-saldo-restante">$0,00</p>
+  </div>
+
+  <!-- 4.3.2. Formulario para registrar un gasto -->
+  <div class="card gasto-form">
+    <div class="form-group">
+      <label for="select-categoria">Categoría:</label>
+      <select id="select-categoria">
+        <option value="" selected>-- Seleccionar Categoría --</option>
+        <option value="Alimentos">Alimentos</option>
+        <option value="Transporte">Transporte</option>
+        <option value="Salud">Salud</option>
+        <option value="Entretenimiento">Entretenimiento</option>
+        <!-- Agrega más categorías si las necesitas -->
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="select-subcategoria">Subcategoría:</label>
+      <select id="select-subcategoria" disabled>
+        <option value="" selected>-- Seleccionar --</option>
+        <!-- Las opciones se cargarán dinámicamente -->
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="input-monto-gasto">Monto:</label>
+      <input
+        type="number"
+        id="input-monto-gasto"
+        placeholder="Ej. 500"
+        min="0"
+        value="0"
+      />
+    </div>
+
+    <button type="button" id="btn-guardar-gasto" class="btn" disabled>
+      Guardar Gasto
+    </button>
+  </div>
+
+  <!-- 4.3.3. Historial de Gastos (tabla) -->
+  <div class="card historial-gastos">
+    <h3>Historial de Gastos</h3>
+    <table id="tabla-gastos">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Categoría</th>
+          <th>Subcategoría</th>
+          <th>Monto</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Aquí se añadirán las filas de cada gasto -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 4.3.4. Botón “Finalizar Mes” (sticky en móvil) -->
+  <button type="button" id="btn-finalizar-mes" class="btn finaliza-mes" disabled>
+    Finalizar Mes
+  </button>
+</section>
+
 
     <!-- 4.4. Placeholder para “Meses” -->
     <section id="meses" class="tab-content">
