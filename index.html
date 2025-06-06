@@ -100,105 +100,104 @@
     </section>
 
     <!-- 4.3. Sección “Gastos” -->
-<section id="gastos" class="tab-content">
-  <h2>Registrar Gastos</h2>
+    <section id="gastos" class="tab-content">
+      <h2>Registrar Gastos</h2>
 
-  <!-- 4.3.1. Saldo Restante -->
-  <div class="card saldo-restante">
-    <p>Saldo restante:</p>
-    <p id="display-saldo-restante">$0,00</p>
-  </div>
+      <!-- 4.3.1. Saldo Restante -->
+      <div class="card saldo-restante">
+        <p>Saldo restante:</p>
+        <p id="display-saldo-restante">$0,00</p>
+      </div>
 
-  <!-- 4.3.2. Formulario para registrar un gasto -->
-  <div class="card gasto-form">
-    <div class="form-group">
-      <label for="select-categoria">Categoría:</label>
-      <select id="select-categoria">
-        <option value="" selected>-- Seleccionar Categoría --</option>
-        <option value="Alimentos">Alimentos</option>
-        <option value="Transporte">Transporte</option>
-        <option value="Salud">Salud</option>
-        <option value="Entretenimiento">Entretenimiento</option>
-        <!-- Agrega más categorías si las necesitas -->
-      </select>
-    </div>
+      <!-- 4.3.2. Formulario para registrar un gasto -->
+      <div class="card gasto-form">
+        <div class="form-group">
+          <label for="select-categoria">Categoría:</label>
+          <select id="select-categoria">
+            <option value="" selected>-- Seleccionar Categoría --</option>
+            <option value="Alimentos">Alimentos</option>
+            <option value="Transporte">Transporte</option>
+            <option value="Salud">Salud</option>
+            <option value="Entretenimiento">Entretenimiento</option>
+            <!-- Agrega más categorías si las necesitas -->
+          </select>
+        </div>
 
-    <div class="form-group">
-      <label for="select-subcategoria">Subcategoría:</label>
-      <select id="select-subcategoria" disabled>
-        <option value="" selected>-- Seleccionar --</option>
-        <!-- Las opciones se cargarán dinámicamente -->
-      </select>
-    </div>
+        <div class="form-group">
+          <label for="select-subcategoria">Subcategoría:</label>
+          <select id="select-subcategoria" disabled>
+            <option value="" selected>-- Seleccionar --</option>
+            <!-- Las opciones se cargarán dinámicamente -->
+          </select>
+        </div>
 
-    <div class="form-group">
-      <label for="input-monto-gasto">Monto:</label>
-      <input
-        type="number"
-        id="input-monto-gasto"
-        placeholder="Ej. 500"
-        min="0"
-        value="0"
-      />
-    </div>
+        <div class="form-group">
+          <label for="input-monto-gasto">Monto:</label>
+          <input
+            type="number"
+            id="input-monto-gasto"
+            placeholder="Ej. 500"
+            min="0"
+            value="0"
+          />
+        </div>
 
-    <button type="button" id="btn-guardar-gasto" class="btn" disabled>
-      Guardar Gasto
-    </button>
-  </div>
+        <button type="button" id="btn-guardar-gasto" class="btn" disabled>
+          Guardar Gasto
+        </button>
+      </div>
 
-  <!-- 4.3.3. Historial de Gastos (tabla) -->
-  <div class="card historial-gastos">
-    <h3>Historial de Gastos</h3>
-    <table id="tabla-gastos">
-      <thead>
-        <tr>
-          <th>Fecha</th>
-          <th>Categoría</th>
-          <th>Subcategoría</th>
-          <th>Monto</th>
-          <th>Acción</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Aquí se añadirán las filas de cada gasto -->
-      </tbody>
-    </table>
-  </div>
+      <!-- 4.3.3. Historial de Gastos (tabla) -->
+      <div class="card historial-gastos">
+        <h3>Historial de Gastos</h3>
+        <table id="tabla-gastos">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Categoría</th>
+              <th>Subcategoría</th>
+              <th>Monto</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Aquí se añadirán las filas de cada gasto -->
+          </tbody>
+        </table>
+      </div>
 
-  <!-- 4.3.4. Botón “Finalizar Mes” (sticky en móvil) -->
-  <button type="button" id="btn-finalizar-mes" class="btn finaliza-mes" disabled>
-    Finalizar Mes
-  </button>
-</section>
+      <!-- 4.3.4. Botón “Finalizar Mes” (sticky en móvil) -->
+      <button type="button" id="btn-finalizar-mes" class="btn finaliza-mes" disabled>
+        Finalizar Mes
+      </button>
+    </section>
 
-<!-- 4.4. Sección “Meses” -->
-<section id="meses" class="tab-content">
-  <h2>Historial de Meses Finalizados</h2>
+    <!-- 4.4. Sección “Meses” -->
+    <section id="meses" class="tab-content">
+      <h2>Historial de Meses Finalizados</h2>
 
-  <!-- 4.4.1. Mensaje alternativo si no hay meses -->
-  <p id="mensaje-sin-meses" class="mensaje-vacio">
-    Aún no has finalizado ningún mes.
-  </p>
+      <!-- 4.4.1. Mensaje alternativo si no hay meses -->
+      <p id="mensaje-sin-meses" class="mensaje-vacio">
+        Aún no has finalizado ningún mes.
+      </p>
 
-  <!-- 4.4.2. Tabla de meses finalizados -->
-  <div class="card meses-tabla" id="contenedor-meses-tabla" hidden>
-    <table id="tabla-meses">
-      <thead>
-        <tr>
-          <th>Mes</th>
-          <th>Ingresos</th>
-          <th>Gastos</th>
-          <th>Saldo Final</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Aquí se agregarán filas de meses dinámicamente -->
-      </tbody>
-    </table>
-  </div>
-</section>
-
+      <!-- 4.4.2. Tabla de meses finalizados -->
+      <div class="card meses-tabla" id="contenedor-meses-tabla" hidden>
+        <table id="tabla-meses">
+          <thead>
+            <tr>
+              <th>Mes</th>
+              <th>Ingresos</th>
+              <th>Gastos</th>
+              <th>Saldo Final</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Aquí se agregarán filas de meses dinámicamente -->
+          </tbody>
+        </table>
+      </div>
+    </section>
 
     <!-- 4.5. Placeholder para “Tarjetas” -->
     <section id="tarjetas" class="tab-content">
@@ -212,9 +211,29 @@
   </main>
 
   <!-- 5. Script de Tab Switching + lógica de “Inicio” -->
-    <!-- 5. Script de Tab Switching + lógica de “Inicio” -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
+      // -------- TAB SWITCHING --------
+      const tabButtons = document.querySelectorAll('.tab-button');
+      const tabContents = document.querySelectorAll('.tab-content');
+
+      tabButtons.forEach((btn) => {
+        btn.addEventListener('click', function () {
+          // 1) Remover clase active de todos los botones
+          tabButtons.forEach((b) => b.classList.remove('active'));
+          // 2) Agregar clase active al botón clicado
+          this.classList.add('active');
+          // 3) Ocultar todas las secciones
+          tabContents.forEach((sec) => sec.classList.remove('active'));
+          // 4) Mostrar la sección cuyo id coincide con data-tab del botón
+          const target = this.getAttribute('data-tab');
+          document.getElementById(target).classList.add('active');
+        });
+      });
+      // Inicial: ya está “Inicio” activo porque en el HTML aparece con class="tab-content active"
+
+      // -------- LÓGICA DE “INICIO” (Ingresos + Ingresos Extras) --------
+
       // Referencias a elementos de “Inicio”
       const ingresoPrincipalInput = document.getElementById('ingreso-principal-input');
       const btnGuardarPrincipal = document.getElementById('btn-guardar-principal');
@@ -227,7 +246,7 @@
       const listaExtras = document.getElementById('lista-ingresos-extras');
       const displaySaldoTotal = document.getElementById('display-saldo-total');
 
-      // Variables internas
+      // Variables internas para Ingresos
       let ingresoPrincipal = 0;
       let ingresosExtras = []; // Array de { id, descripcion, monto }
       let nextExtraId = 0;
@@ -237,7 +256,7 @@
         return '$' + valor.toLocaleString('es-AR', { minimumFractionDigits: 2 });
       }
 
-      // 1) Si ya hay totalIngresosActual en localStorage, cargamos estado
+      // 1) Si ya hay totalIngresosActual en localStorage, cargamos estado inicial
       const ingresosGuardados = localStorage.getItem('totalIngresosActual');
       if (ingresosGuardados && parseFloat(ingresosGuardados) > 0) {
         ingresoPrincipal = parseFloat(ingresosGuardados);
@@ -245,6 +264,8 @@
         ingresoPrincipalInput.disabled = true;
         btnGuardarPrincipal.disabled = true;
         contenidoExtras.hidden = false;
+        // Mostrar el saldo total recargado
+        displaySaldoTotal.textContent = formatearMoneda(ingresoPrincipal);
       }
 
       // 2) Habilitar/Deshabilitar botón “Guardar Ingreso Principal”
@@ -266,7 +287,7 @@
         ingresoPrincipalInput.disabled = true;
         btnGuardarPrincipal.disabled = true;
 
-        // Guardar en localStorage el ingreso principal
+        // Guardar en localStorage el ingreso principal (sin extras todavía)
         localStorage.setItem('totalIngresosActual', ingresoPrincipal);
 
         // Mostrar sección de ingresos extras
@@ -327,7 +348,7 @@
         montoExtraInput.value = 0;
         toggleBtnGuardarExtra();
 
-        // Actualizar el saldo total
+        // Actualizar el saldo total (principal + extras)
         actualizarSaldoTotal();
       });
 
@@ -342,21 +363,17 @@
         }
       });
 
-      // 8) Función para calcular y mostrar el saldo total
+      // 8) Función para calcular y mostrar el saldo total y guardarlo en localStorage
       function actualizarSaldoTotal() {
         const sumaExtras = ingresosExtras.reduce((acum, ex) => acum + ex.monto, 0);
         const saldo = ingresoPrincipal + sumaExtras;
         displaySaldoTotal.textContent = formatearMoneda(saldo);
 
-        // Además, guardamos en localStorage el total de ingresos (“principal + extras”)
+        // Guardar el total (principal + extras) en localStorage
         localStorage.setItem('totalIngresosActual', saldo);
       }
 
-      // 9) Si al cargar la página había extras en localStorage, podemos recargarlos
-      // (Opcional: si quieres persistir la lista de extras, tendrías que guardarlos igual en localStorage.
-      //  En este momento no persiste en recarga, pero al menos el saldo sí se mantiene.)
-
-      // 10) Mostrar el saldo inicial en pantalla (por si recargamos con ingresos guardados)
+      // 9) Mostrar el saldo inicial en pantalla (por si recargamos con ingresos guardados)
       const saldoRecargado = parseFloat(localStorage.getItem('totalIngresosActual')) || 0;
       if (saldoRecargado > 0) {
         displaySaldoTotal.textContent = formatearMoneda(saldoRecargado);
@@ -366,7 +383,7 @@
 
   <!-- Enlazamos la lógica de Gastos -->
   <script src="assets/js/gastos.js"></script>
-   <!-- Enlazamos la lógica de Meses -->
+  <!-- Enlazamos la lógica de Meses -->
   <script src="assets/js/meses.js"></script>
 </body>
 </html>
