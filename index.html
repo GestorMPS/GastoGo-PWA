@@ -275,6 +275,9 @@
         ingresoPrincipalInput.disabled = true;
         btnGuardarPrincipal.disabled = true;
 
+        // Guardar en localStorage el ingreso principal
+        localStorage.setItem('totalIngresosActual', ingresoPrincipal);
+
         // Mostrar sección de ingresos extras
         contenidoExtras.hidden = false;
 
@@ -353,6 +356,8 @@
         const sumaExtras = ingresosExtras.reduce((acum, ex) => acum + ex.monto, 0);
         const saldo = ingresoPrincipal + sumaExtras;
         displaySaldoTotal.textContent = formatearMoneda(saldo);
+         // Además, guardamos en localStorage el total de ingresos (“principal + extras”)
+      localStorage.setItem('totalIngresosActual', ingresoPrincipal + sumaExtras);
       }
     });
   </script>
