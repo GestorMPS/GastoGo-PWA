@@ -19,7 +19,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
   let gastos = [];             // Array de objetos { id, fecha, categoria, subcategoria, monto }
   let nextGastoId = 0;
-  let saldoInicial = 0;        // Este valor vendrá desde “Ingreso Principal + Extras”
+  // Intentar leer el total de ingresos actuales desde localStorage
+  let saldoInicial = 0;
+  const ingresosGuardados = localStorage.getItem('totalIngresosActual');
+  if (ingresosGuardados) {
+  // Parseamos el string guardado (puede ser algo como "50000" o "52000")
+  saldoInicial = parseFloat(ingresosGuardados) || 0;
+  }
 
   // 1) Cargar subcategorías al cambiar la categoría
   selectCategoria.addEventListener('change', function () {
