@@ -282,9 +282,39 @@ h3 {
   }
 }
 
+/* =================================================
+   8. Estilos para sección “Meses”
+   ================================================= */
+.mensaje-vacio {
+  text-align: center;
+  font-size: 1rem;
+  color: #555;
+  margin-top: 1rem;
+}
+
+.meses-tabla {
+  margin-top: 1rem;
+  overflow-x: auto;
+}
+#tabla-meses {
+  width: 100%;
+  border-collapse: collapse;
+}
+#tabla-meses th,
+#tabla-meses td {
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  text-align: left;
+  font-size: 0.9rem;
+}
+#tabla-meses th {
+  background-color: #f3f4f6;
+  font-weight: bold;
+}
+
 
 /* =================================================
-   8. Media Queries para tablet y desktop
+   9. Media Queries para tablet y desktop
    (mobile-first)
    ================================================= */
 
