@@ -199,10 +199,43 @@
       </div>
     </section>
 
-    <!-- 4.5. Placeholder para “Tarjetas” -->
-    <section id="tarjetas" class="tab-content">
-      <!-- Aquí gestionaremos las tarjetas de crédito -->
-    </section>
+  <!-- 4.5. Sección “Tarjetas” -->
+<section id="tarjetas" class="tab-content">
+  <h2>Gestión de Tarjetas</h2>
+
+  <!-- 4.5.1. Formulario para agregar tarjeta -->
+  <div class="card tarjeta-form">
+    <div class="form-group">
+      <label for="input-nombre-tarjeta">Nombre de la Tarjeta:</label>
+      <input
+        type="text"
+        id="input-nombre-tarjeta"
+        placeholder="Ej. Visa Personal"
+      />
+    </div>
+    <div class="form-group">
+      <label for="input-numero-tarjeta">Número de Tarjeta:</label>
+      <input
+        type="text"
+        id="input-numero-tarjeta"
+        placeholder="Ej. 1234 5678 9012 3456"
+        maxlength="19"
+      />
+    </div>
+    <button type="button" id="btn-guardar-tarjeta" class="btn" disabled>
+      Guardar Tarjeta
+    </button>
+  </div>
+
+  <!-- 4.5.2. Lista de tarjetas guardadas -->
+  <div class="card lista-tarjetas">
+    <h3>Tarjetas Guardadas</h3>
+    <ul id="ul-tarjetas" class="lista-items">
+      <!-- Aquí se irán agregando los <li> de cada tarjeta -->
+    </ul>
+  </div>
+</section>
+
 
     <!-- 4.6. Placeholder para “Ajustes” -->
     <section id="ajustes" class="tab-content">
