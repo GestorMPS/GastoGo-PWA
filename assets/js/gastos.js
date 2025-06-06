@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-  // 1. Referencias a elementos de “Gastos” y de la pestaña
+  // 1. Referencias a elementos de “Gastos” y pestañas
   const selectCategoria = document.getElementById('select-categoria');
   const selectSubcategoria = document.getElementById('select-subcategoria');
   const inputMontoGasto = document.getElementById('input-monto-gasto');
@@ -17,51 +17,58 @@ document.addEventListener('DOMContentLoaded', function () {
     Entretenimiento: ['Cine', 'Streaming', 'Salidas'],
   };
 
-  // 2. Variable para el saldo, que recargaremos según localStorage al abrir Gastos
-  let saldoInicial = 0;
-
-  // Obtener saldo desde localStorage (si existe)
-  function recargarSaldoDesdeLocalStorage() {
-    const ingresosGuardados = localStorage.getItem('totalIngresosActual');
-    saldoInicial = parseFloat(ingresosGuardados) || 0;
-    actualizarSaldoPantalla();
-    // Como recargamos, aseguramos que “Finalizar Mes” se deshabilite si no hay gastos
-    btnFinalizarMes.disabled = gastos.length === 0;
-  }
-
-  // 3. Listener para recargar saldo cada vez que se abra la pestaña “Gastos”
-  tabBotonGastos.addEventListener('click', function () {
-    // Antes de mostrar la sección, actualizamos saldo desde lo guardado
-    recargarSaldoDesdeLocalStorage();
-  });
-
-  let gastos = [];    // Array de { id, fecha, categoria, subcategoria, monto }
+  // 2. Lista de gastos en memoria
+  let gastos = [];               // Array de { id, fecha, categoria, subcategoria, monto }
   let nextGastoId = 0;
 
-  // 4. Función helper para formatear moneda
+  // 3. Función helper para formatear moneda
   function formatearMoneda(valor) {
     return '$' + valor.toLocaleString('es-AR', { minimumFractionDigits: 2 });
   }
 
-  // 5. Mostrar Saldo Restante en pantalla
-  function actualizarSaldoPantalla() {
+  // 4. Variables para saldo
+  let saldoInicial = 0; // Este valor se recargará desde localStorage al entrar a Gastos
+
+  // 5. Función que recarga el saldo desde localStorage y le resta los gastos guardados en memoria
+  function recargarSaldoDesdeLocalStorage() {
+    const ingresosGuardados = localStorage.getItem('totalIngresosActual');
+    const totalIngresos = parseFloat(ingresosGuardados) || 0;
+    // Restamos a totalIngresos la sumatoria de los gastos ya en memoria:
+    const totalGastosMemoria = gastos.reduce((acum, g) => acum + g.monto, 0);
+    saldoInicial = totalIngresos - totalGastosMemoria;
     displaySaldoRestante.textContent = formatearMoneda(saldoInicial);
+    // Si no hay ingreso o ingreso = 0, bloqueamos todo
+    const bloquear = totalIngresos <= 0;
+    selectCategoria.disabled = bloquear;
+    inputMontoGasto.disabled = bloquear;
+    // Aunque el botón solo se habilita cuando hay categoría y monto, si bloquear=true,
+    // forzamos btnGuardarGasto.disabled = true:
+    btnGuardarGasto.disabled = bloquear || btnGuardarGasto.disabled;
+    // Y “Finalizar Mes” también
+    btnFinalizarMes.disabled = totalIngresos <= 0 || gastos.length === 0;
   }
 
-  // Llamada inicial en caso de que el usuario abra directamente la pestaña Gastos tras recargar
+  // 6. Listener para que, cada vez que se haga clic en la pestaña “Gastos”, recargue el saldo
+  tabBotonGastos.addEventListener('click', function () {
+    recargarSaldoDesdeLocalStorage();
+  });
+
+  // 7. Al cargar la página por primera vez, recargamos una vez (en caso de que inicien en Gastos)
   recargarSaldoDesdeLocalStorage();
 
-  // 6. Habilitar/deshabilitar “Guardar Gasto”
+  // 8. Habilitar/deshabilitar “Guardar Gasto” según categoría y monto válidos
   function toggleBtnGuardarGasto() {
     const categoriaVal = selectCategoria.value;
     const montoVal = parseFloat(inputMontoGasto.value);
-    btnGuardarGasto.disabled = !categoriaVal || isNaN(montoVal) || montoVal <= 0;
+    // Además, si no hay ingreso guardado, que quede siempre deshabilitado
+    const ingresosGuardados = parseFloat(localStorage.getItem('totalIngresosActual')) || 0;
+    btnGuardarGasto.disabled = !categoriaVal || isNaN(montoVal) || montoVal <= 0 || ingresosGuardados <= 0;
   }
   selectCategoria.addEventListener('change', toggleBtnGuardarGasto);
   inputMontoGasto.addEventListener('input', toggleBtnGuardarGasto);
   toggleBtnGuardarGasto();
 
-  // 7. Al cambiar categoría, cargamos subcategorías
+  // 9. Al cambiar categoría, cargamos subcategorías
   selectCategoria.addEventListener('change', function () {
     const cat = this.value;
     if (!cat) {
@@ -78,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function () {
     selectSubcategoria.disabled = opcionesSub.length === 0;
   });
 
-  // 8. Al hacer clic en “Guardar Gasto”
+  // 10. Al hacer clic en “Guardar Gasto”
   btnGuardarGasto.addEventListener('click', function () {
     const categoriaVal = selectCategoria.value;
     const subcategoriaVal = selectSubcategoria.value || '—';
@@ -114,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Restar monto del saldo inicial y actualizar
     saldoInicial -= gastoObj.monto;
-    actualizarSaldoPantalla();
+    displaySaldoRestante.textContent = formatearMoneda(saldoInicial);
 
     // Limpiar formulario
     selectCategoria.value = '';
@@ -123,11 +130,12 @@ document.addEventListener('DOMContentLoaded', function () {
     inputMontoGasto.value = 0;
     toggleBtnGuardarGasto();
 
-    // Habilitar botón “Finalizar Mes” si hay al menos un gasto
-    btnFinalizarMes.disabled = gastos.length === 0;
+    // Habilitar “Finalizar Mes” si hay al menos un gasto y hay ingreso guardado
+    const ingresosGuardados = parseFloat(localStorage.getItem('totalIngresosActual')) || 0;
+    btnFinalizarMes.disabled = ingresosGuardados <= 0 || gastos.length === 0;
   });
 
-  // 9. Eliminar un gasto al hacer clic en “Eliminar”
+  // 11. Eliminar un gasto al hacer clic en “Eliminar”
   tablaGastosBody.addEventListener('click', function (e) {
     if (e.target.classList.contains('btn-eliminar-gasto')) {
       const tr = e.target.closest('tr');
@@ -138,14 +146,15 @@ document.addEventListener('DOMContentLoaded', function () {
         saldoInicial += gastos[idx].monto;
         gastos.splice(idx, 1);
         tablaGastosBody.removeChild(tr);
-        actualizarSaldoPantalla();
+        displaySaldoRestante.textContent = formatearMoneda(saldoInicial);
         // Deshabilitar “Finalizar Mes” si ya no hay gastos
-        btnFinalizarMes.disabled = gastos.length === 0;
+        const ingresosGuardados = parseFloat(localStorage.getItem('totalIngresosActual')) || 0;
+        btnFinalizarMes.disabled = ingresosGuardados <= 0 || gastos.length === 0;
       }
     }
   });
 
-  // 10. Al hacer clic en “Finalizar Mes”
+  // 12. Al hacer clic en “Finalizar Mes”
   btnFinalizarMes.addEventListener('click', function () {
     // a) Leer totalIngresos desde localStorage
     const ingresosGuardados = localStorage.getItem('totalIngresosActual');
@@ -181,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function () {
     gastos = [];
     tablaGastosBody.innerHTML = '';
     saldoInicial = 0;
-    actualizarSaldoPantalla();
+    displaySaldoRestante.textContent = formatearMoneda(0);
     btnFinalizarMes.disabled = true;
 
     // h) Resetear UI de “Gastos”: Categoria, Subcategoria, Monto
@@ -191,26 +200,23 @@ document.addEventListener('DOMContentLoaded', function () {
     inputMontoGasto.value = 0;
     toggleBtnGuardarGasto();
 
-    // i) (Opcional) Cambiar pestaña activa a “Meses” o a “Inicio” según prefieras
-    //    (Tal y como hablamos, no es crítico, así que lo omitimos aquí. Si quieres que cambie, descomenta abajo)
-
-    // document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
-    // document.querySelector('[data-tab="meses"]').classList.add('active');
-    // document.querySelectorAll('.tab-content').forEach(sec => sec.classList.remove('active'));
-    // document.getElementById('meses').classList.add('active');
-
-    // j) Resetear UI de “Inicio”: desbloquear input principal y ponerlo a 0
+    // i) Resetear UI de “Inicio”: desbloquear input principal y ponerlo a 0
     const ingresoPrincipalInput = document.getElementById('ingreso-principal-input');
     const btnGuardarPrincipal = document.getElementById('btn-guardar-principal');
     ingresoPrincipalInput.disabled = false;
     ingresoPrincipalInput.value = 0;
     btnGuardarPrincipal.disabled = true;
-    //    Ocultar sección de Ingresos Extras y limpiar lista
     const contenidoExtras = document.getElementById('contenido-ingresos-extras');
     contenidoExtras.hidden = true;
     document.getElementById('lista-ingresos-extras').innerHTML = '';
-    //    Actualizar el saldo total en “Inicio” a $0
     document.getElementById('display-saldo-total').textContent = formatearMoneda(0);
+
+    // j) (Opcional) Cambiar pestaña activa a “Meses” o a “Inicio”
+    //    Si no quieres que cambie automáticamente, puedes comentar o quitar estas líneas:
+    // document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+    // document.querySelector('[data-tab="meses"]').classList.add('active');
+    // document.querySelectorAll('.tab-content').forEach(sec => sec.classList.remove('active'));
+    // document.getElementById('meses').classList.add('active');
 
     // Finalmente, mostrar alerta de éxito
     alert('Mes finalizado correctamente.');
