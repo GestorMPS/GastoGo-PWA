@@ -212,29 +212,10 @@
   </main>
 
   <!-- 5. Script de Tab Switching + lógica de “Inicio” -->
+    <!-- 5. Script de Tab Switching + lógica de “Inicio” -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      // 5.1. TAB SWITCHING: mostrar/ocultar secciones según data-tab
-      const tabButtons = document.querySelectorAll('.tab-button');
-      const tabContents = document.querySelectorAll('.tab-content');
-
-      tabButtons.forEach((btn) => {
-        btn.addEventListener('click', function () {
-          // 1) Remover clase active de todos los botones
-          tabButtons.forEach((b) => b.classList.remove('active'));
-          // 2) Agregar clase active al botón clicado
-          this.classList.add('active');
-          // 3) Ocultar todas las secciones
-          tabContents.forEach((sec) => sec.classList.remove('active'));
-          // 4) Mostrar la sección cuyo id coincide con data-tab del botón
-          const target = this.getAttribute('data-tab');
-          document.getElementById(target).classList.add('active');
-        });
-      });
-
-      // 5.2. LÓGICA DE “INICIO” (Ingresos + Ingresos Extras)
-
-      // Referencias a elementos
+      // Referencias a elementos de “Inicio”
       const ingresoPrincipalInput = document.getElementById('ingreso-principal-input');
       const btnGuardarPrincipal = document.getElementById('btn-guardar-principal');
       const contenidoExtras = document.getElementById('contenido-ingresos-extras');
@@ -256,7 +237,17 @@
         return '$' + valor.toLocaleString('es-AR', { minimumFractionDigits: 2 });
       }
 
-      // 1) Habilitar/Deshabilitar botón “Guardar Ingreso Principal”
+      // 1) Si ya hay totalIngresosActual en localStorage, cargamos estado
+      const ingresosGuardados = localStorage.getItem('totalIngresosActual');
+      if (ingresosGuardados && parseFloat(ingresosGuardados) > 0) {
+        ingresoPrincipal = parseFloat(ingresosGuardados);
+        ingresoPrincipalInput.value = ingresoPrincipal;
+        ingresoPrincipalInput.disabled = true;
+        btnGuardarPrincipal.disabled = true;
+        contenidoExtras.hidden = false;
+      }
+
+      // 2) Habilitar/Deshabilitar botón “Guardar Ingreso Principal”
       function toggleBtnGuardarPrincipal() {
         const v = parseFloat(ingresoPrincipalInput.value);
         btnGuardarPrincipal.disabled = isNaN(v) || v <= 0;
@@ -264,7 +255,7 @@
       ingresoPrincipalInput.addEventListener('input', toggleBtnGuardarPrincipal);
       toggleBtnGuardarPrincipal();
 
-      // 2) Al hacer clic en “Guardar Ingreso Principal”
+      // 3) Al hacer clic en “Guardar Ingreso Principal”
       btnGuardarPrincipal.addEventListener('click', function () {
         ingresoPrincipal = parseFloat(ingresoPrincipalInput.value) || 0;
         if (ingresoPrincipal <= 0) {
@@ -281,11 +272,11 @@
         // Mostrar sección de ingresos extras
         contenidoExtras.hidden = false;
 
-        // Actualizar saldo total
+        // Actualizar el saldo total
         actualizarSaldoTotal();
       });
 
-      // 3) Mostrar u ocultar formulario para Ingreso Extra
+      // 4) Mostrar u ocultar formulario para Ingreso Extra
       let formularioMostrado = false;
       btnMostrarExtra.addEventListener('click', function () {
         formularioMostrado = !formularioMostrado;
@@ -298,7 +289,7 @@
         }
       });
 
-      // 4) Habilitar/Deshabilitar botón “Guardar Extra”
+      // 5) Habilitar/Deshabilitar botón “Guardar Extra”
       function toggleBtnGuardarExtra() {
         const desc = descExtraInput.value.trim();
         const m = parseFloat(montoExtraInput.value);
@@ -308,7 +299,7 @@
       montoExtraInput.addEventListener('input', toggleBtnGuardarExtra);
       toggleBtnGuardarExtra();
 
-      // 5) Al hacer clic en “Guardar Extra”
+      // 6) Al hacer clic en “Guardar Extra”
       btnGuardarExtra.addEventListener('click', function () {
         const desc = descExtraInput.value.trim();
         const monto = parseFloat(montoExtraInput.value) || 0;
@@ -336,11 +327,11 @@
         montoExtraInput.value = 0;
         toggleBtnGuardarExtra();
 
-        // Actualizar saldo total
+        // Actualizar el saldo total
         actualizarSaldoTotal();
       });
 
-      // 6) Manejar clic en “Eliminar” de un ingreso extra
+      // 7) Manejar clic en “Eliminar” de un ingreso extra
       listaExtras.addEventListener('click', function (e) {
         if (e.target.classList.contains('btn-eliminar-extra')) {
           const li = e.target.closest('li.item-extra');
@@ -351,16 +342,28 @@
         }
       });
 
-      // 7) Función para calcular y mostrar el saldo total
+      // 8) Función para calcular y mostrar el saldo total
       function actualizarSaldoTotal() {
         const sumaExtras = ingresosExtras.reduce((acum, ex) => acum + ex.monto, 0);
         const saldo = ingresoPrincipal + sumaExtras;
         displaySaldoTotal.textContent = formatearMoneda(saldo);
-         // Además, guardamos en localStorage el total de ingresos (“principal + extras”)
-      localStorage.setItem('totalIngresosActual', ingresoPrincipal + sumaExtras);
+
+        // Además, guardamos en localStorage el total de ingresos (“principal + extras”)
+        localStorage.setItem('totalIngresosActual', saldo);
+      }
+
+      // 9) Si al cargar la página había extras en localStorage, podemos recargarlos
+      // (Opcional: si quieres persistir la lista de extras, tendrías que guardarlos igual en localStorage.
+      //  En este momento no persiste en recarga, pero al menos el saldo sí se mantiene.)
+
+      // 10) Mostrar el saldo inicial en pantalla (por si recargamos con ingresos guardados)
+      const saldoRecargado = parseFloat(localStorage.getItem('totalIngresosActual')) || 0;
+      if (saldoRecargado > 0) {
+        displaySaldoTotal.textContent = formatearMoneda(saldoRecargado);
       }
     });
   </script>
+
   <!-- Enlazamos la lógica de Gastos -->
   <script src="assets/js/gastos.js"></script>
    <!-- Enlazamos la lógica de Meses -->
