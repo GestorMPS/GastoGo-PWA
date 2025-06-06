@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // 8. Al hacer clic en “Finalizar Mes”
   btnFinalizarMes.addEventListener('click', function () {
-    // a) Leer totalIngresos desde localStorage (ya lo tenemos en ingresoInicial, pero leemos de nuevo por seguridad)
+    // a) Leer totalIngresos desde localStorage
     const ingresosGuardados = localStorage.getItem('totalIngresosActual');
     const totalIngresos = parseFloat(ingresosGuardados) || 0;
 
@@ -145,10 +145,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // d) Determinar el nombre del mes actual
     const fechaHoy = new Date();
-    // Obtenemos mes en texto abreviado en español: ej. “Junio”
     const nombreMes = fechaHoy.toLocaleDateString('es-AR', { month: 'long' });
     const anio = fechaHoy.getFullYear();
-    // Formato abreviado: “Junio ’25”
     const mesFormateado = `${nombreMes} ’${anio.toString().slice(-2)}`;
 
     // e) Disparar el evento personalizado para “Meses”
@@ -179,31 +177,31 @@ document.addEventListener('DOMContentLoaded', function () {
     inputMontoGasto.value = 0;
     toggleBtnGuardarGasto();
 
-    // i) Resetear UI de “Inicio”: volvemos a esa pestaña para que ingrese nuevo mes
-    //    1) Activar la pestaña “Inicio” (quitar .active de “Gastos” y poner en “Inicio”)
+    // i) Resetear UI de “Inicio”:
+    // 1) Cambiar pestaña activa a “Inicio”
     document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
     document.querySelector('[data-tab="inicio"]').classList.add('active');
-    //    2) Ocultar todas las secciones y mostrar “Inicio”
+    // 2) Ocultar todas las secciones y mostrar “Inicio”
     document.querySelectorAll('.tab-content').forEach(sec => sec.classList.remove('active'));
     document.getElementById('inicio').classList.add('active');
-
-    //    3) En “Inicio”, desbloquear el input de ingreso principal y ponerlo a 0
+    // 3) En “Inicio”, desbloquear input principal y ponerlo a 0
     const ingresoPrincipalInput = document.getElementById('ingreso-principal-input');
     const btnGuardarPrincipal = document.getElementById('btn-guardar-principal');
     ingresoPrincipalInput.disabled = false;
     ingresoPrincipalInput.value = 0;
     btnGuardarPrincipal.disabled = true;
-    //    4) Ocultar la sección de ingresos extras y limpiar lista de extras
+    // 4) Ocultar sección de Ingresos Extras y limpiar lista
     const contenidoExtras = document.getElementById('contenido-ingresos-extras');
     contenidoExtras.hidden = true;
     document.getElementById('lista-ingresos-extras').innerHTML = '';
-    //    5) Resetear variables internas de “Inicio”:
-    window.ingresoPrincipal = 0;     // si necesitas exponerlo globalmente
-    window.ingresosExtras = [];      // idem
-    //    6) Actualizar el saldo total en “Inicio” a $0
+    // 5) Resetear variables internas de “Inicio”
+    // (se redefinirán cuando el usuario guarde un nuevo ingreso)
+    window.ingresoPrincipal = 0;
+    window.ingresosExtras = [];
+    // 6) Actualizar el saldo total en “Inicio” a $0
     document.getElementById('display-saldo-total').textContent = formatearMoneda(0);
 
-    // Finalmente, opcional: mostrar un mensaje al usuario
+    // Finalmente, mostrar alerta de éxito
     alert('Mes finalizado correctamente.');
   });
 });
