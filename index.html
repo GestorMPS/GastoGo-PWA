@@ -172,11 +172,33 @@
   </button>
 </section>
 
+<!-- 4.4. Sección “Meses” -->
+<section id="meses" class="tab-content">
+  <h2>Historial de Meses Finalizados</h2>
 
-    <!-- 4.4. Placeholder para “Meses” -->
-    <section id="meses" class="tab-content">
-      <!-- Aquí irá el historial de meses finalizados -->
-    </section>
+  <!-- 4.4.1. Mensaje alternativo si no hay meses -->
+  <p id="mensaje-sin-meses" class="mensaje-vacio">
+    Aún no has finalizado ningún mes.
+  </p>
+
+  <!-- 4.4.2. Tabla de meses finalizados -->
+  <div class="card meses-tabla" id="contenedor-meses-tabla" hidden>
+    <table id="tabla-meses">
+      <thead>
+        <tr>
+          <th>Mes</th>
+          <th>Ingresos</th>
+          <th>Gastos</th>
+          <th>Saldo Final</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Aquí se agregarán filas de meses dinámicamente -->
+      </tbody>
+    </table>
+  </div>
+</section>
+
 
     <!-- 4.5. Placeholder para “Tarjetas” -->
     <section id="tarjetas" class="tab-content">
