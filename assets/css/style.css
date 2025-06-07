@@ -428,9 +428,89 @@ h3 {
 .tabla-gastos-tarjeta th { background: #f3f4f6; }
 .resumen-tarjetas { text-align: right; padding-top: 0.5rem; }
 
+/* =================================================
+   11. Estilos para Tarjetas — Ciclos y Resúmenes
+   ================================================= */
+/* Listado de tarjetas */
+.lista-items li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  background: #f9fafb;
+  border-radius: 4px;
+}
+.lista-items li span {
+  flex: 1;
+  font-size: 0.95rem;
+}
+.lista-items li .btn-tarjeta-pagada,
+.lista-items li .btn-eliminar-tarjeta {
+  margin-left: 0.5rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.btn-tarjeta-pagada {
+  color: #15803d; /* verde */
+}
+.btn-eliminar-tarjeta {
+  color: #b91c1c; /* rojo */
+}
+
+/* Resumen general */
+.resumen-tarjetas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 1rem;
+}
+.resumen-tarjetas p {
+  font-weight: bold;
+  text-align: right;
+  margin: 0;
+}
+
+/* Tabla de Gastos y Cuotas */
+.tabla-gastos-tarjeta {
+  overflow-x: auto;
+}
+.tabla-gastos-tarjeta table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.tabla-gastos-tarjeta th,
+.tabla-gastos-tarjeta td {
+  border: 1px solid #e5e7eb;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  text-align: left;
+}
+.tabla-gastos-tarjeta th {
+  background: #f3f4f6;
+  font-weight: 600;
+}
+
+/* Formularios responsivos */
+@media (min-width: 640px) {
+  .tarjeta-form,
+  .gasto-tarjeta-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    align-items: end;
+  }
+  .tarjeta-form button,
+  .gasto-tarjeta-form button {
+    grid-column: -1;
+  }
+}
+
 
 /* =================================================
-   11. Media Queries para tablet y desktop
+   12. Media Queries para tablet y desktop
    (mobile-first)
    ================================================= */
 
