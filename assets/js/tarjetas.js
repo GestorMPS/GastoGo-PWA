@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const li = document.createElement('li');
       li.dataset.id = t.id;
       const acumulado = gastos
-        .filter(g => g.tarjetaId === t.id) >= .../* ciclo range */)
+        .filter(g => g.tarjetaId === t.id)    // eliminamos el placeholder “...”
         .reduce((sum,g)=> sum + g.montoCuota, 0);
       li.innerHTML = `
         <span>${t.entidad} (${t.alias}) — Cierre: ${t.diaCierre} — ${formatearMoneda(acumulado)}</span>
