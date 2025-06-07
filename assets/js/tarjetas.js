@@ -1,64 +1,88 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Referencias
-  const inputEntidad = document.getElementById('input-entidad-tarjeta');
-  const inputAlias  = document.getElementById('input-alias-tarjeta');
-  const inputCierre = document.getElementById('input-dia-cierre');
-  const btnGuardarTarjeta = document.getElementById('btn-guardar-tarjeta');
-  const ulTarjetas = document.getElementById('ul-tarjetas');
+  // Referencias a DOM
+  const inputEntidad   = document.getElementById('input-entidad-tarjeta');
+  const inputAlias     = document.getElementById('input-alias-tarjeta');
+  const inputCierre    = document.getElementById('input-dia-cierre');
+  const btnGuardarTarj = document.getElementById('btn-guardar-tarjeta');
+  const ulTarjetas     = document.getElementById('ul-tarjetas');
 
-  const selectTarjetaGasto = document.getElementById('select-tarjeta-gasto');
-  const inputFechaCompra = document.getElementById('input-fecha-compra');
-  const inputMontoGastoTarjeta = document.getElementById('input-monto-gasto-tarjeta');
-  const inputDetalleGasto = document.getElementById('input-detalle-gasto');
-  const inputCuotasGasto = document.getElementById('input-cuotas-gasto');
-  const btnGuardarGastoTarjeta = document.getElementById('btn-guardar-gasto-tarjeta');
-  const tbodyGastosTarjeta = document.querySelector('#tabla-gastos-tarjeta tbody');
-  const labelTotalGeneral = document.getElementById('label-total-general');
+  const selectTarjG = document.getElementById('select-tarjeta-gasto');
+  const inputFecha  = document.getElementById('input-fecha-compra');
+  const inputMonto  = document.getElementById('input-monto-gasto-tarjeta');
+  const inputDet    = document.getElementById('input-detalle-gasto');
+  const inputCuo    = document.getElementById('input-cuotas-gasto');
+  const btnGuardarG = document.getElementById('btn-guardar-gasto-tarjeta');
 
-  // Datos en memoria
+  const tbodyGastos = document.querySelector('#tabla-gastos-tarjeta tbody');
+  const labelTotalC = document.getElementById('label-total-ciclo');
+  const labelTotalP = document.getElementById('label-total-prox-ciclo');
+
+  // Datos en memoria (y localStorage)
   let tarjetas = JSON.parse(localStorage.getItem('tarjetas')) || [];
-  let gastos = JSON.parse(localStorage.getItem('gastosTarjeta')) || [];
+  let gastos    = JSON.parse(localStorage.getItem('gastos'))    || [];
 
   // Helpers
-  const formatearMoneda = v => '$' + v.toLocaleString('es-AR', { minimumFractionDigits: 2 });
-  const calcularPrimerVencimiento = (fechaCompra, diaCorte) => {
-    const compra = new Date(fechaCompra);
-    // mes siguiente si día compra >= diaCorte
-    const mes = compra.getDate() >= diaCorte ? compra.getMonth() + 1 : compra.getMonth();
-    const anio = mes === compra.getMonth() + 1 ? compra.getFullYear() : compra.getFullYear();
-    return new Date(anio, mes, diaCorte);
-  };
+  const formatearMoneda = v =>
+    '$' + v.toLocaleString('es-AR', { minimumFractionDigits: 2 });
 
-  // Renderizados
+  // 1) Calcular ciclos de cada tarjeta
+  function calcularCiclos(diaCierre) {
+    const hoy = new Date();
+    // Cierre actual
+    let cierreAct = new Date(hoy.getFullYear(), hoy.getMonth(), diaCierre);
+    if (hoy.getDate() > diaCierre) cierreAct.setMonth(cierreAct.getMonth() + 1);
+    // Cierre anterior
+    let cierreAnt = new Date(cierreAct);
+    cierreAnt.setMonth(cierreAnt.getMonth() - 1);
+    // Rango
+    const inicio = new Date(cierreAnt); inicio.setDate(inicio.getDate() + 1);
+    const fin    = new Date(cierreAct);
+    return { inicio, fin };
+  }
+
+  // 2) Renderizar listado de tarjetas
   function renderTarjetas() {
     ulTarjetas.innerHTML = '';
-    selectTarjetaGasto.innerHTML = '<option value="">-- Seleccionar Tarjeta --</option>';
+    selectTarjG.innerHTML = '<option value="">-- Seleccionar Tarjeta --</option>';
+
     tarjetas.forEach(t => {
-      // lista
+      const { inicio, fin } = calcularCiclos(t.diaCierre);
+
+      // Acumular cuotas dentro de cada rango
+      let resCiclo = 0, resProx = 0;
+      gastos.filter(g => g.tarjetaId === t.id).forEach(g => {
+        const pv = new Date(g.primerVencimiento);
+        if (pv >= inicio && pv <= fin) resCiclo += g.montoCuota;
+        else                             resProx  += g.montoCuota;
+      });
+
+      // LI
       const li = document.createElement('li');
       li.dataset.id = t.id;
-      const acumulado = gastos
-        .filter(g => g.tarjetaId === t.id)    // eliminamos el placeholder “...”
-        .reduce((sum,g)=> sum + g.montoCuota, 0);
       li.innerHTML = `
-        <span>${t.entidad} (${t.alias}) — Cierre: ${t.diaCierre} — ${formatearMoneda(acumulado)}</span>
+        <span>${t.entidad} (${t.alias}) — Cierre: ${t.diaCierre}</span>
+        <span>Ciclo: ${formatearMoneda(resCiclo)}</span>
+        <span>Próx: ${formatearMoneda(resProx)}</span>
+        <button class="btn-tarjeta-pagada">Pagada</button>
         <button class="btn-eliminar-tarjeta">Eliminar</button>
       `;
       ulTarjetas.appendChild(li);
-      // select
+
+      // Select
       const opt = document.createElement('option');
       opt.value = t.id;
       opt.textContent = `${t.entidad} (${t.alias})`;
-      selectTarjetaGasto.appendChild(opt);
+      selectTarjG.appendChild(opt);
     });
+
     localStorage.setItem('tarjetas', JSON.stringify(tarjetas));
     actualizarResumenGeneral();
   }
 
+  // 3) Renderizar tabla de gastos
   function renderGastos() {
-    tbodyGastosTarjeta.innerHTML = '';
+    tbodyGastos.innerHTML = '';
     gastos.forEach(g => {
-      // calcular montoCuota y primerVencimiento ya guardados
       const tr = document.createElement('tr');
       tr.dataset.id = g.id;
       tr.innerHTML = `
@@ -67,95 +91,126 @@ document.addEventListener('DOMContentLoaded', () => {
         <td>${g.cuotas}</td>
         <td>${formatearMoneda(g.montoCuota)}</td>
         <td>${new Date(g.primerVencimiento).toLocaleDateString('es-AR')}</td>
+        <td>${g.cicloAsignado}</td>
         <td><button class="btn-eliminar-gasto-tarjeta">Eliminar</button></td>
       `;
-      tbodyGastosTarjeta.appendChild(tr);
+      tbodyGastos.appendChild(tr);
     });
-    localStorage.setItem('gastosTarjeta', JSON.stringify(gastos));
+    localStorage.setItem('gastos', JSON.stringify(gastos));
     actualizarResumenGeneral();
   }
 
+  // 4) Actualizar resúmenes globales
   function actualizarResumenGeneral() {
-    const total = gastos
-      .filter(g => {
-        // incluir sólo cuotas cuyo vencimiento esté en el ciclo actual
-        // aquí calculas el rango según cada tarjeta.diaCierre
-        return true;
-      })
-      .reduce((sum,g) => sum + g.montoCuota, 0);
-    labelTotalGeneral.textContent = `Total mensual: ${formatearMoneda(total)}`;
+    let totalC = 0, totalP = 0;
+    tarjetas.forEach(t => {
+      const { inicio, fin } = calcularCiclos(t.diaCierre);
+      gastos.filter(g => g.tarjetaId === t.id).forEach(g => {
+        const pv = new Date(g.primerVencimiento);
+        if (pv >= inicio && pv <= fin) totalC += g.montoCuota;
+        else                             totalP += g.montoCuota;
+      });
+    });
+    labelTotalC.textContent = `Total Ciclo Actual: ${formatearMoneda(totalC)}`;
+    labelTotalP.textContent = `Total Próximo Ciclo: ${formatearMoneda(totalP)}`;
   }
 
-  // Validaciones y listeners para guardar tarjeta
-  function toggleBtnGuardarTarjeta() {
-    btnGuardarTarjeta.disabled = !inputEntidad.value.trim() || !inputAlias.value.trim() || 
-      !(parseInt(inputCierre.value) >=1 && parseInt(inputCierre.value)<=28);
+  // 5) Validaciones y listeners para agregar tarjeta
+  function toggleBtnTarj() {
+    btnGuardarTarj.disabled = !inputEntidad.value.trim()
+      || !inputAlias.value.trim()
+      || !(+inputCierre.value >=1 && +inputCierre.value <=28);
   }
-  inputEntidad.addEventListener('input', toggleBtnGuardarTarjeta);
-  inputAlias.addEventListener('input', toggleBtnGuardarTarjeta);
-  inputCierre.addEventListener('input', toggleBtnGuardarTarjeta);
-  toggleBtnGuardarTarjeta();
+  [inputEntidad, inputAlias, inputCierre].forEach(el => el.addEventListener('input', toggleBtnTarj));
+  toggleBtnTarj();
 
-  btnGuardarTarjeta.addEventListener('click', () => {
+  btnGuardarTarj.addEventListener('click', () => {
     tarjetas.push({
       id: Date.now(),
       entidad: inputEntidad.value.trim(),
       alias: inputAlias.value.trim(),
-      diaCierre: parseInt(inputCierre.value,10)
+      diaCierre: +inputCierre.value
     });
     inputEntidad.value = '';
     inputAlias.value = '';
     inputCierre.value = '';
-    toggleBtnGuardarTarjeta();
     renderTarjetas();
   });
 
-  // Listeners para gastos en tarjeta
-  function toggleBtnGuardarGasto() {
-    btnGuardarGastoTarjeta.disabled = !selectTarjetaGasto.value ||
-      !inputFechaCompra.value || parseFloat(inputMontoGastoTarjeta.value)<=0;
+  // 6) Validaciones y listener para registrar gasto
+  function toggleBtnGast() {
+    btnGuardarG.disabled = !selectTarjG.value
+      || !inputFecha.value
+      || +inputMonto.value <= 0
+      || +inputCuo.value < 1;
   }
-  [selectTarjetaGasto, inputFechaCompra, inputMontoGastoTarjeta, inputDetalleGasto, inputCuotasGasto]
-    .forEach(el => el.addEventListener('input', toggleBtnGuardarGasto));
-  toggleBtnGuardarGasto();
+  [selectTarjG, inputFecha, inputMonto, inputCuo, inputDet].forEach(el => el.addEventListener('input', toggleBtnGast));
+  toggleBtnGast();
 
-  btnGuardarGastoTarjeta.addEventListener('click', () => {
-    const tarjetaId = parseInt(selectTarjetaGasto.value,10);
-    const fechaCompra = inputFechaCompra.value;
-    const detalle = inputDetalleGasto.value.trim();
-    const montoTotal = parseFloat(inputMontoGastoTarjeta.value);
-    const cuotas = parseInt(inputCuotasGasto.value,10);
-    const primerVenc = calcularPrimerVencimiento(fechaCompra, tarjetas.find(t=>t.id===tarjetaId).diaCierre);
-    const montoCuota = montoTotal / cuotas;
+  btnGuardarG.addEventListener('click', () => {
+    const tarjetaId = +selectTarjG.value;
+    const fechaCompra = inputFecha.value;
+    const detalle     = inputDet.value.trim();
+    const montoTotal  = +inputMonto.value;
+    const cuotas      = +inputCuo.value;
+
+    // Calcular primer vencimiento y ciclo asignado
+    const tarjeta = tarjetas.find(t => t.id === tarjetaId);
+    const { inicio, fin } = calcularCiclos(tarjeta.diaCierre);
+    const pv = calcularPrimerVencimiento(fechaCompra, tarjeta.diaCierre);
+    const cicloAsign = (pv >= inicio && pv <= fin) ? 'Actual' : 'Próximo';
+
     gastos.push({
       id: Date.now(),
       tarjetaId,
       fechaCompra,
       detalle,
       cuotas,
-      primerVencimiento: primerVenc.toISOString(),
-      montoCuota
+      montoCuota: montoTotal / cuotas,
+      primerVencimiento: pv.toISOString(),
+      cicloAsignado: cicloAsign
     });
-    inputDetalleGasto.value = '';
-    inputMontoGastoTarjeta.value = 0;
-    inputCuotasGasto.value = 1;
+
+    // Limpiar form
+    selectTarjG.value = '';
+    inputFecha.value = '';
+    inputMonto.value = 0;
+    inputDet.value = '';
+    inputCuo.value = 1;
     renderGastos();
   });
 
-  // Eliminar tarjeta o gasto
+  // 7) Botones dinámicos (pagada y eliminar)
   ulTarjetas.addEventListener('click', e => {
+    const li = e.target.closest('li');
+    const id = +li.dataset.id;
+    if (e.target.classList.contains('btn-tarjeta-pagada')) {
+      // Rotar resúmenes
+      const t = tarjetas.find(x => x.id === id);
+      // recalc actuales y próximos
+      const { inicio, fin } = calcularCiclos(t.diaCierre);
+      let resC = 0, resP = 0;
+      gastos.filter(g => g.tarjetaId === id).forEach(g => {
+        const pv = new Date(g.primerVencimiento);
+        if (pv >= inicio && pv <= fin) resC += g.montoCuota;
+        else                            resP += g.montoCuota;
+      });
+      // Asignar
+      t.resumenCiclo     = resP;
+      t.resumenProxCiclo = 0;
+      renderTarjetas();
+    }
     if (e.target.classList.contains('btn-eliminar-tarjeta')) {
-      const id = parseInt(e.target.closest('li').dataset.id,10);
-      tarjetas = tarjetas.filter(t=>t.id!==id);
-      gastos = gastos.filter(g=>g.tarjetaId!==id);
+      tarjetas = tarjetas.filter(t => t.id !== id);
+      gastos    = gastos.filter(g => g.tarjetaId !== id);
       renderTarjetas();
       renderGastos();
     }
   });
-  tbodyGastosTarjeta.addEventListener('click', e=>{
-    if(e.target.classList.contains('btn-eliminar-gasto-tarjeta')){
-      const id = parseInt(e.target.closest('tr').dataset.id,10);
-      gastos = gastos.filter(g=>g.id!==id);
+  tbodyGastos.addEventListener('click', e => {
+    if (e.target.classList.contains('btn-eliminar-gasto-tarjeta')) {
+      const id = +e.target.closest('tr').dataset.id;
+      gastos = gastos.filter(g => g.id !== id);
       renderGastos();
     }
   });
