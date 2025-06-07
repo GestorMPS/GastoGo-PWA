@@ -542,3 +542,30 @@ h3 {
     justify-content: space-evenly;
   }
 }
+/* Ajuste de posición de los botones dentro de las cards de Tarjetas */
+.tarjeta-form,
+.gasto-tarjeta-form {
+  position: relative;      /* establece contexto para absolute children */
+}
+
+/* Botones dentro de .tarjeta-form y .gasto-tarjeta-form */
+#btn-guardar-tarjeta,
+#btn-guardar-gasto-tarjeta {
+  position: absolute;
+  right: 1rem;             /* espacio desde el borde derecho */
+  bottom: 1rem;            /* espacio desde el borde inferior */
+  width: auto;
+  padding: 0.5rem 1rem;
+  /* Opcional: para que no queme todo el ancho en móvil */
+  max-width: calc(100% - 2rem);
+}
+
+/* En pantallas grandes, los botones se mantienen en la última columna de la grid */
+@media (min-width: 640px) {
+  #btn-guardar-tarjeta,
+  #btn-guardar-gasto-tarjeta {
+    position: static;
+    margin-top: 1rem;
+    max-width: none;
+  }
+}
