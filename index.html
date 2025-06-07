@@ -198,12 +198,11 @@
         </table>
       </div>
     </section>
-
-  <!-- 4.5. Sección “Tarjetas” -->
-<section id="tarjetas" class="tab-content">
+        <!-- 4.5. Sección “Tarjetas” -->
+    <section id="tarjetas" class="tab-content">
   <h2>Gestión de Tarjetas</h2>
 
-  <!-- Formulario para agregar tarjeta -->
+  <!-- 4.5.1. Formulario para agregar tarjeta -->
   <div class="card tarjeta-form">
     <div class="form-group">
       <label for="input-entidad-tarjeta">Entidad bancaria:</label>
@@ -222,22 +221,21 @@
     </button>
   </div>
 
-  <!-- Lista de tarjetas guardadas -->
+  <!-- 4.5.2. Lista de tarjetas guardadas -->
   <div class="card lista-tarjetas">
     <h3>Tarjetas Guardadas</h3>
     <ul id="ul-tarjetas" class="lista-items">
-      <!-- Li de cada tarjeta: Alias — Día cierre — Acumulado — [Eliminar] -->
+      <!-- -> Cada <li> tendrá: Alias (Entidad), Día cierre, Resumen de ciclo, Resumen próximo ciclo, [Tarjeta pagada], [Eliminar] -->
     </ul>
   </div>
 
-  <!-- Formulario para registrar un gasto -->
+  <!-- 4.5.3. Formulario para registrar un gasto en tarjeta -->
   <div class="card gasto-tarjeta-form">
     <h3>Registrar Gasto en Tarjeta</h3>
     <div class="form-group">
       <label for="select-tarjeta-gasto">Tarjeta:</label>
       <select id="select-tarjeta-gasto">
         <option value="">-- Seleccionar Tarjeta --</option>
-        <!-- Opciones con value=tarjetaId -->
       </select>
     </div>
     <div class="form-group">
@@ -261,7 +259,7 @@
     </button>
   </div>
 
-  <!-- Tabla de gastos por cuotas -->
+  <!-- 4.5.4. Tabla de gastos por cuotas -->
   <div class="card tabla-gastos-tarjeta">
     <h3>Gastos y Cuotas</h3>
     <table id="tabla-gastos-tarjeta">
@@ -271,22 +269,24 @@
           <th>Detalle</th>
           <th>Cuotas</th>
           <th>Monto cuota</th>
-          <th>Primer venc.</th>
+          <th>Fecha primer venc.</th>
+          <th>Ciclo asignado</th>
           <th>Acción</th>
         </tr>
       </thead>
       <tbody>
-        <!-- Filas dinámicas de cuotas -->
+        <!-- Aquí se insertarán las filas de cada cuota -->
       </tbody>
     </table>
   </div>
 
-  <!-- Resumen mensual -->
+  <!-- 4.5.5. Resumen general de ciclos -->
   <div class="card resumen-tarjetas">
-    <h3>Resumen del Ciclo</h3>
-    <p id="label-total-general">Total mensual: $0,00</p>
+    <h3>Resumen de Ciclo</h3>
+    <p id="label-total-ciclo">Total Ciclo Actual: $0,00</p>
+    <p id="label-total-prox-ciclo">Total Próximo Ciclo: $0,00</p>
   </div>
-</section>
+    </section>         
 
     <!-- 4.6. Placeholder para “Ajustes” -->
     <section id="ajustes" class="tab-content">
