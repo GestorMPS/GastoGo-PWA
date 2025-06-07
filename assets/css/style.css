@@ -380,7 +380,57 @@ h3 {
 }
 
 /* =================================================
-   10. Media Queries para tablet y desktop
+   10. Estilos para sección “Tarjetas” (actualizado)
+   ================================================= */
+.tarjeta-form, .gasto-tarjeta-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.tarjeta-form .form-group,
+.gasto-tarjeta-form .form-group {
+  display: flex;
+  flex-direction: column;
+}
+.tarjeta-form label,
+.gasto-tarjeta-form label {
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+.tarjeta-form input[type="text"],
+.tarjeta-form input[type="number"],
+.gasto-tarjeta-form input[type="date"],
+.gasto-tarjeta-form input[type="number"],
+.gasto-tarjeta-form input[type="text"],
+.gasto-tarjeta-form select {
+  width: 100%;
+  padding: 0.4rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+#btn-guardar-tarjeta,
+#btn-guardar-gasto-tarjeta {
+  align-self: flex-end;
+}
+.lista-tarjetas { margin-bottom: 1rem; }
+.lista-items li { justify-content: space-between; }
+.tabla-gastos-tarjeta table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.tabla-gastos-tarjeta th,
+.tabla-gastos-tarjeta td {
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+}
+.tabla-gastos-tarjeta th { background: #f3f4f6; }
+.resumen-tarjetas { text-align: right; padding-top: 0.5rem; }
+
+
+/* =================================================
+   11. Media Queries para tablet y desktop
    (mobile-first)
    ================================================= */
 
