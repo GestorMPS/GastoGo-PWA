@@ -508,6 +508,49 @@ h3 {
   }
 }
 
+/* =================================================
+   Ajustes finos para botones en Tarjetas
+   ================================================= */
+/* 1. Aumentar padding-bottom en los formularios para dejar hueco al botón */
+.tarjeta-form,
+.gasto-tarjeta-form {
+  padding-bottom: 3rem; /* deja 3rem de espacio inferior dentro del card */
+}
+
+/* 2. Para móviles: botón dentro del flujo, no absolute */
+@media (max-width: 639px) {
+  #btn-guardar-tarjeta,
+  #btn-guardar-gasto-tarjeta {
+    position: static !important;  /* fuerza que sea parte del flujo */
+    width: 100%;                  /* ocupa todo el ancho */
+    margin-top: 1rem;
+    padding: 0.75rem;
+    box-sizing: border-box;
+  }
+  .tarjeta-form,
+  .gasto-tarjeta-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-bottom: 0; /* ya no necesitamos el extra si el botón está en flujo */
+  }
+}
+
+/* 3. En desktop, mantenemos absolute pero ajustamos el padding-bottom */
+@media (min-width: 640px) {
+  .tarjeta-form,
+  .gasto-tarjeta-form {
+    padding-bottom: 1rem; /* espacio suficiente para botón absolute */
+  }
+  #btn-guardar-tarjeta,
+  #btn-guardar-gasto-tarjeta {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    width: auto;
+  }
+}
+
 
 /* =================================================
    12. Media Queries para tablet y desktop
