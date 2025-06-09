@@ -39,6 +39,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const fin    = new Date(cierreAct);
     return { inicio, fin };
   }
+  /**
+ * Dada una fecha de compra (string ISO “YYYY-MM-DD”) y un día de cierre (1–28),
+ * devuelve un objeto Date con la fecha del próximo vencimiento de la primera cuota.
+ * 
+ * - Si la compra ocurre **antes o en** el día de cierre de ese mes,
+ *   el primer vencimiento es el día de cierre **del siguiente mes**.
+ * - Si la compra ocurre **después** del día de cierre,
+ *   el primer vencimiento es el día de cierre **del mes subsiguiente**.
+ */
+function calcularPrimerVencimiento(fechaCompraISO, diaCierre) {
+  const compra = new Date(fechaCompraISO);
+  const año = compra.getFullYear();
+  const mes = compra.getMonth();
+  const día = compra.getDate();
+
+  // Si día de compra ≤ día de cierre → vence el mes siguiente
+  // Si día de compra > día de cierre → vence en dos meses
+  let mesVto = (día <= diaCierre) ? mes + 1 : mes + 2;
+  let añoVto = año;
+
+  // Ajuste de año si cruzamos diciembre
+  if (mesVto > 11) {
+    mesVto -= 12;
+    añoVto += 1;
+  }
+
+  return new Date(añoVto, mesVto, diaCierre);
+}
+
 
   // 2) Renderizar listado de tarjetas
   function renderTarjetas() {
