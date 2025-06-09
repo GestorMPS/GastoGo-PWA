@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ulTarjetas.innerHTML = '';
     selectTarjG.innerHTML = '<option value="">-- Seleccionar Tarjeta --</option>';
 
+tarjetas.forEach(t => {
    const resCiclo = gastos
   .filter(g => g.tarjetaId === t.id && g.cicloAsignado === 'Actual')
   .reduce((sum, g) => sum + g.montoCuota, 0);
@@ -55,12 +56,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
       // Acumular cuotas dentro de cada rango
-      let resCiclo = 0, resProx = 0;
+      /*let resCiclo = 0, resProx = 0;
       gastos.filter(g => g.tarjetaId === t.id).forEach(g => {
         const pv = new Date(g.primerVencimiento);
         if (pv >= inicio && pv <= fin) resCiclo += g.montoCuota;
         else                             resProx  += g.montoCuota;
-      });
+      }); */
 
       // LI
       const li = document.createElement('li');
