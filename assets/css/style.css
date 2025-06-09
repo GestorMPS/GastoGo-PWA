@@ -535,12 +535,45 @@ h3 {
     padding-bottom: 0; /* ya no necesitamos el extra si el botón está en flujo */
   }
 }
+/* =================================================
+   Ajuste con grid para formularios de Tarjetas                     ============================ NUevo Ajuste ===============
+   ================================================= */
+.tarjeta-form,
+.gasto-tarjeta-form {
+  display: grid;
+  /* En desktop, 4 columnas: 3 inputs + 1 botón */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) auto;
+  gap: 1rem;
+  align-items: end;
+}
 
-/* 3. En desktop, mantenemos absolute pero ajustamos el padding-bottom */
-@media (min-width: 640px) {
+/* El botón siempre en la última columna, alineado a la derecha */
+.tarjeta-form button,
+.gasto-tarjeta-form button {
+  justify-self: end;
+  align-self: end;
+  /* Opcional para no hacerle demasiado ancho en móvil */
+  min-width: 120px;
+  padding: 0.6rem 1rem;
+}
+
+/* En pantallas pequeñas, hacemos que el botón ocupe toda la fila */
+@media (max-width: 640px) {
   .tarjeta-form,
   .gasto-tarjeta-form {
-    padding-bottom: 1rem; /* espacio suficiente para botón absolute */
+    grid-template-columns: 1fr;
+  }
+  .tarjeta-form button,
+  .gasto-tarjeta-form button {
+    justify-self: stretch;
+  }
+}
+
+/* 3. En desktop, mantenemos absolute pero ajustamos el padding-bottom */
+ /* @media (min-width: 640px) {
+  .tarjeta-form,
+  .gasto-tarjeta-form {
+  padding-bottom: 1rem;  espacio suficiente para botón absolute 
   }
   #btn-guardar-tarjeta,
   #btn-guardar-gasto-tarjeta {
@@ -549,7 +582,7 @@ h3 {
     bottom: 1rem;
     width: auto;
   }
-}
+} /* 
 
 
 /* =================================================
@@ -593,7 +626,7 @@ h3 {
 
 /* Botones dentro de .tarjeta-form y .gasto-tarjeta-form */
 #btn-guardar-tarjeta,
-#btn-guardar-gasto-tarjeta {
+ /* #btn-guardar-gasto-tarjeta {
   position: absolute;
   right: 1rem;             /* espacio desde el borde derecho */
   bottom: 1rem;            /* espacio desde el borde inferior */
@@ -601,7 +634,7 @@ h3 {
   padding: 0.5rem 1rem;
   /* Opcional: para que no queme todo el ancho en móvil */
   max-width: calc(100% - 2rem);
-}
+} /* 
 
 /* En pantallas grandes, los botones se mantienen en la última columna de la grid */
 @media (min-width: 640px) {
