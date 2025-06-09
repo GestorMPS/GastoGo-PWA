@@ -45,8 +45,14 @@ document.addEventListener('DOMContentLoaded', () => {
     ulTarjetas.innerHTML = '';
     selectTarjG.innerHTML = '<option value="">-- Seleccionar Tarjeta --</option>';
 
-    tarjetas.forEach(t => {
-      const { inicio, fin } = calcularCiclos(t.diaCierre);
+   const resCiclo = gastos
+  .filter(g => g.tarjetaId === t.id && g.cicloAsignado === 'Actual')
+  .reduce((sum, g) => sum + g.montoCuota, 0);
+
+   const resProx = gastos
+  .filter(g => g.tarjetaId === t.id && g.cicloAsignado === 'Próximo')
+  .reduce((sum, g) => sum + g.montoCuota, 0);
+
 
       // Acumular cuotas dentro de cada rango
       let resCiclo = 0, resProx = 0;
@@ -102,17 +108,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 4) Actualizar resúmenes globales
   function actualizarResumenGeneral() {
-    let totalC = 0, totalP = 0;
-    tarjetas.forEach(t => {
-      const { inicio, fin } = calcularCiclos(t.diaCierre);
-      gastos.filter(g => g.tarjetaId === t.id).forEach(g => {
-        const pv = new Date(g.primerVencimiento);
-        if (pv >= inicio && pv <= fin) totalC += g.montoCuota;
-        else                             totalP += g.montoCuota;
-      });
-    });
-    labelTotalC.textContent = `Total Ciclo Actual: ${formatearMoneda(totalC)}`;
-    labelTotalP.textContent = `Total Próximo Ciclo: ${formatearMoneda(totalP)}`;
+    const totalC = gastos
+  .filter(g => g.cicloAsignado === 'Actual')
+  .reduce((sum, g) => sum + g.montoCuota, 0);
+
+   const totalP = gastos
+  .filter(g => g.cicloAsignado === 'Próximo')
+  .reduce((sum, g) => sum + g.montoCuota, 0);
+
+   labelTotalC.textContent = `Total Ciclo Actual: ${formatearMoneda(totalC)}`;
+   labelTotalP.textContent = `Total Próximo Ciclo: ${formatearMoneda(totalP)}`;
+
   }
 
   // 5) Validaciones y listeners para agregar tarjeta
