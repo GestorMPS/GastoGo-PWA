@@ -185,21 +185,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const li = e.target.closest('li');
     const id = +li.dataset.id;
     if (e.target.classList.contains('btn-tarjeta-pagada')) {
-      // Rotar resúmenes
-      const t = tarjetas.find(x => x.id === id);
-      // recalc actuales y próximos
-      const { inicio, fin } = calcularCiclos(t.diaCierre);
-      let resC = 0, resP = 0;
-      gastos.filter(g => g.tarjetaId === id).forEach(g => {
-        const pv = new Date(g.primerVencimiento);
-        if (pv >= inicio && pv <= fin) resC += g.montoCuota;
-        else                            resP += g.montoCuota;
-      });
-      // Asignar
-      t.resumenCiclo     = resP;
-      t.resumenProxCiclo = 0;
-      renderTarjetas();
+  // Calculamos cuánto hay en Actual y Próximo
+  const resumenActual = gastos
+    .filter(g => g.tarjetaId === id && g.cicloAsignado === 'Actual')
+    .reduce((sum, g) => sum + g.montoCuota, 0);
+  const resumenProx = gastos
+    .filter(g => g.tarjetaId === id && g.cicloAsignado === 'Próximo')
+    .reduce((sum, g) => sum + g.montoCuota, 0);
+
+  // Rotamos: marcamos todas las cuotas Próximo como Actual
+  gastos = gastos.map(g => {
+    if (g.tarjetaId === id && g.cicloAsignado === 'Próximo') {
+      return { ...g, cicloAsignado: 'Actual' };
     }
+    return g;
+  });
+
+  // Re-renderizamos listados y totales
+  renderTarjetas();
+  renderGastos();
+    }
+
     if (e.target.classList.contains('btn-eliminar-tarjeta')) {
       tarjetas = tarjetas.filter(t => t.id !== id);
       gastos    = gastos.filter(g => g.tarjetaId !== id);
