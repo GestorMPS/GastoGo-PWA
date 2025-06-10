@@ -1,5 +1,4 @@
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
+  document.addEventListener('DOMContentLoaded', function () {
       // -------- TAB SWITCHING --------
       const tabButtons = document.querySelectorAll('.tab-button');
       const tabContents = document.querySelectorAll('.tab-content');
@@ -180,4 +179,3 @@ function formatearMoneda(valor) {
         displaySaldoTotal.textContent = formatearMoneda(saldoRecargado);
       }
     });
-  </script>
