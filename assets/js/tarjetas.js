@@ -202,7 +202,7 @@ tarjetas.forEach(t => {
       fechaCompra,
       detalle,
       cuotasPendientes,                     // guardamos cuotas pendientes
-      montoCuota: montoTotal / cuotas,
+      montoCuota: montoTotal / cuotasPendientes,
       primerVencimiento: pv.toISOString(),
       cicloAsignado: cicloAsign
     });
