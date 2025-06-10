@@ -22,9 +22,26 @@ document.addEventListener('DOMContentLoaded', function () {
   let nextGastoId = 0;
 
   // 3. Función helper para formatear moneda
-  function formatearMoneda(valor) {
-    return '$' + valor.toLocaleString('es-AR', { minimumFractionDigits: 2 });
+ function formatearMoneda(valor) {
+  // Leemos la moneda actual
+  const m = localStorage.getItem('moneda') || 'ARS';
+  let symbol, locale;
+  switch (m) {
+    case 'USD':
+      symbol = 'US$';
+      locale = 'en-US';
+      break;
+    case 'EUR':
+      symbol = '€';
+      locale = 'de-DE';
+      break;
+    default:
+      symbol = '$';
+      locale = 'es-AR';
   }
+  return symbol + valor.toLocaleString(locale, { minimumFractionDigits: 2 });
+}
+
 
   // 4. Variables para saldo
   let saldoInicial = 0; // Este valor se recargará desde localStorage al entrar a Gastos
