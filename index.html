@@ -295,10 +295,43 @@
   </div>
     </section>         
 
-    <!-- 4.6. Placeholder para “Ajustes” -->
-    <section id="ajustes" class="tab-content">
-      <!-- Aquí irán los ajustes de configuración -->
-    </section>
+   <!-- 4.6. Sección “Ajustes” -->
+<section id="ajustes" class="tab-content">
+  <h2>Ajustes de la App</h2>
+
+  <!-- 4.6.1. Selector de Moneda -->
+  <div class="card ajuste-item">
+    <label for="select-moneda">Moneda:</label>
+    <select id="select-moneda">
+      <option value="ARS">Pesos (ARS)</option>
+      <option value="USD">Dólares (USD)</option>
+      <option value="EUR">Euros (EUR)</option>
+    </select>
+  </div>
+
+  <!-- 4.6.2. Toggle Modo Claro/Oscuro -->
+  <div class="card ajuste-item">
+    <span>Modo:</span>
+    <label class="switch">
+      <input type="checkbox" id="toggle-modo-oscuro" />
+      <span class="slider"></span>
+    </label>
+    <span id="label-modo">Claro</span>
+  </div>
+
+  <!-- 4.6.3. Exportar / Importar datos -->
+  <div class="card ajuste-item">
+    <button type="button" id="btn-exportar" class="btn">Exportar Datos</button>
+    <button type="button" id="btn-importar" class="btn">Importar Datos</button>
+    <input type="file" id="input-import-file" accept=".json" hidden />
+  </div>
+
+  <!-- 4.6.4. Versión de la App -->
+  <div class="card ajuste-item version-app">
+    <small>v1.0.0</small>
+  </div>
+</section>
+
   </main>
 
   <!-- 5. Script de Tab Switching + lógica de “Inicio” -->
