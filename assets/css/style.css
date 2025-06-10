@@ -705,3 +705,40 @@ input:checked + .slider:before {
 .version-app {
   justify-content: center;
 }
+/* =================================================
+   14. Modo Oscuro
+   ================================================= */
+body.dark-mode {
+  background-color: #111827;
+  color: #f3f4f6;
+}
+body.dark-mode .header {
+  background-color: #1f2937;
+}
+body.dark-mode .card {
+  background-color: #1f2937;
+  color: #f3f4f6;
+}
+body.dark-mode .tab-bar {
+  background-color: #374151;
+}
+body.dark-mode .tab-button {
+  color: #e5e7eb;
+}
+body.dark-mode .tab-button.active {
+  color: #f9fafb;
+  border-bottom-color: #3b82f6;
+}
+/* Inputs y botones en modo oscuro */
+body.dark-mode input,
+body.dark-mode select {
+  background-color: #374151;
+  color: #f3f4f6;
+  border: 1px solid #4b5563;
+}
+body.dark-mode .btn {
+  background-color: #2563eb;
+}
+body.dark-mode .btn-secundario {
+  background-color: #4b5563;
+}
