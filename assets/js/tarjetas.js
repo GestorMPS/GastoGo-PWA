@@ -21,6 +21,27 @@ document.addEventListener('DOMContentLoaded', () => {
   let tarjetas = JSON.parse(localStorage.getItem('tarjetas')) || [];
   let gastos    = JSON.parse(localStorage.getItem('gastos'))    || [];
 
+  function formatearMoneda(valor) {
+  // Leemos la moneda actual
+  const m = localStorage.getItem('moneda') || 'ARS';
+  let symbol, locale;
+  switch (m) {
+    case 'USD':
+      symbol = 'US$';
+      locale = 'en-US';
+      break;
+    case 'EUR':
+      symbol = '€';
+      locale = 'de-DE';
+      break;
+    default:
+      symbol = '$';
+      locale = 'es-AR';
+  }
+  return symbol + valor.toLocaleString(locale, { minimumFractionDigits: 2 });
+}
+
+
   // Helpers
   const formatearMoneda = v =>
     '$' + v.toLocaleString('es-AR', { minimumFractionDigits: 2 });
