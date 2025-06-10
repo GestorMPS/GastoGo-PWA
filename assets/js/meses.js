@@ -10,8 +10,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Función para formatear moneda (igual que en gastos)
   function formatearMoneda(valor) {
-    return '$' + valor.toLocaleString('es-AR', { minimumFractionDigits: 2 });
+  // Leemos la moneda actual
+  const m = localStorage.getItem('moneda') || 'ARS';
+  let symbol, locale;
+  switch (m) {
+    case 'USD':
+      symbol = 'US$';
+      locale = 'en-US';
+      break;
+    case 'EUR':
+      symbol = '€';
+      locale = 'de-DE';
+      break;
+    default:
+      symbol = '$';
+      locale = 'es-AR';
   }
+  return symbol + valor.toLocaleString(locale, { minimumFractionDigits: 2 });
+}
+
 
   // 1) Función para renderizar el historial de meses
   function renderizarMeses() {
