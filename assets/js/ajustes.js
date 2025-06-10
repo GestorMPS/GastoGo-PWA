@@ -10,10 +10,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // 1) Cargar preferencia de moneda
   const monedaGuardada = localStorage.getItem('moneda') || 'ARS';
   selectMoneda.value = monedaGuardada;
-  selectMoneda.addEventListener('change', () => {
-    localStorage.setItem('moneda', selectMoneda.value);
-    alert(`Moneda cambiada a ${selectMoneda.value}`);
-  });
+ selectMoneda.addEventListener('change', () => {
+  localStorage.setItem('moneda', selectMoneda.value);
+  alert(`Moneda cambiada a ${selectMoneda.value}. La página se recargará.`);
+  location.reload();  // <-- fuerza recarga para actualizar todos los saldos/formateos
+});
+
 
   // 2) Modo claro/oscuro
   const modoGuardado = localStorage.getItem('modoOscuro') === 'true';
