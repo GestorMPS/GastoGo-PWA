@@ -124,7 +124,7 @@ tarjetas.forEach(t => {
       tr.innerHTML = `
         <td>${g.fechaCompra}</td>
         <td>${g.detalle}</td>
-        <td>${g.cuotas}</td>
+        <td>${g.cuotasPendientes}</td>       <!-- mostrar cuotas pendientes -->
         <td>${formatearMoneda(g.montoCuota)}</td>
         <td>${new Date(g.primerVencimiento).toLocaleDateString('es-AR')}</td>
         <td>${g.cicloAsignado}</td>
@@ -188,7 +188,7 @@ tarjetas.forEach(t => {
     const fechaCompra = inputFecha.value;
     const detalle     = inputDet.value.trim();
     const montoTotal  = +inputMonto.value;
-    const cuotas      = +inputCuo.value;
+    const cuotasPendientes = +inputCuo.value; // renombramos
 
     // Calcular primer vencimiento y ciclo asignado
     const tarjeta = tarjetas.find(t => t.id === tarjetaId);
@@ -201,7 +201,7 @@ tarjetas.forEach(t => {
       tarjetaId,
       fechaCompra,
       detalle,
-      cuotas,
+      cuotasPendientes,                     // guardamos cuotas pendientes
       montoCuota: montoTotal / cuotas,
       primerVencimiento: pv.toISOString(),
       cicloAsignado: cicloAsign
@@ -221,26 +221,28 @@ tarjetas.forEach(t => {
     const li = e.target.closest('li');
     const id = +li.dataset.id;
     if (e.target.classList.contains('btn-tarjeta-pagada')) {
-  // Calculamos cuánto hay en Actual y Próximo
-  const resumenActual = gastos
-    .filter(g => g.tarjetaId === id && g.cicloAsignado === 'Actual')
-    .reduce((sum, g) => sum + g.montoCuota, 0);
-  const resumenProx = gastos
-    .filter(g => g.tarjetaId === id && g.cicloAsignado === 'Próximo')
-    .reduce((sum, g) => sum + g.montoCuota, 0);
+  const id = +e.target.closest('li').dataset.id;
 
-  // Rotamos: marcamos todas las cuotas Próximo como Actual
+  // Para cada gasto de esta tarjeta:
   gastos = gastos.map(g => {
-    if (g.tarjetaId === id && g.cicloAsignado === 'Próximo') {
-      return { ...g, cicloAsignado: 'Actual' };
+    if (g.tarjetaId === id) {
+      // solo si es del ciclo Actual o Próximo, decrementamos
+      if (g.cuotasPendientes > 1) {
+        return { ...g, cuotasPendientes: g.cuotasPendientes - 1 };
+      } else {
+        // si solo queda una cuota, eliminamos marcándolo con cuotasPendientes=0
+        return null;
+      }
     }
     return g;
-  });
+  })
+  .filter(Boolean); // eliminar los nulos
 
-  // Re-renderizamos listados y totales
+  // Una vez ajustado, recalc y redraw
   renderTarjetas();
   renderGastos();
-    }
+}
+
 
     if (e.target.classList.contains('btn-eliminar-tarjeta')) {
       tarjetas = tarjetas.filter(t => t.id !== id);
