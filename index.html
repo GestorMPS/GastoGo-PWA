@@ -376,9 +376,23 @@
       let nextExtraId = 0;
 
       // Formatear número como moneda $X.XXX,XX
-      function formatearMoneda(valor) {
-        return '$' + valor.toLocaleString('es-AR', { minimumFractionDigits: 2 });
-      }
+     // ——— Formatear moneda según moneda seleccionada ———
+function formatearMoneda(valor) {
+  const m = localStorage.getItem('moneda') || 'ARS';
+  let symbol, locale;
+  switch (m) {
+    case 'USD':
+      symbol = 'US$'; locale = 'en-US'; break;
+    case 'EUR':
+      symbol = '€'; locale = 'de-DE'; break;
+    default:
+      symbol = '$'; locale = 'es-AR';
+  }
+  return symbol + Number(valor)
+    .toLocaleString(locale, { minimumFractionDigits: 2 });
+}
+// —————————————————————————————————————————————
+
 
       // 1) Si ya hay totalIngresosActual en localStorage, cargamos estado inicial
       const ingresosGuardados = localStorage.getItem('totalIngresosActual');
