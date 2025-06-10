@@ -43,8 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // Helpers
-  const formatearMoneda = v =>
-    '$' + v.toLocaleString('es-AR', { minimumFractionDigits: 2 });
 
   // 1) Calcular ciclos de cada tarjeta
   function calcularCiclos(diaCierre) {
