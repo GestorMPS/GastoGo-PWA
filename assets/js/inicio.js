@@ -172,6 +172,8 @@ function formatearMoneda(valor) {
         // Guardar el total (principal + extras) en localStorage
         localStorage.setItem('totalIngresosActual', saldo);
       }
+      // Cuando cambie la moneda, recalcular y mostrar de nuevo el saldo
+      document.addEventListener('currencyChanged', actualizarSaldoTotal);
 
       // 9) Mostrar el saldo inicial en pantalla (por si recargamos con ingresos guardados)
       const saldoRecargado = parseFloat(localStorage.getItem('totalIngresosActual')) || 0;
