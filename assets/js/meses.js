@@ -56,10 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
       `;
       tablaMesesBody.appendChild(tr);
     });
-        // En meses.js, justo después de definir renderMeses():
-   document.addEventListener('currencyChanged', () => {
-    renderMeses();
-  });
+
   }
 
   // 2) Intentar cargar meses previos de localStorage (si existen)
@@ -85,5 +82,9 @@ document.addEventListener('DOMContentLoaded', function () {
     localStorage.setItem('mesesFinalizados', JSON.stringify(mesesFinalizados));
     // Re-renderizar
     renderizarMeses();
+  });
+          // En meses.js, justo después de definir renderMeses():
+   document.addEventListener('currencyChanged', () => {
+    renderMeses();
   });
 });
