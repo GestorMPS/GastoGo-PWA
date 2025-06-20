@@ -12,8 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
   selectMoneda.value = monedaGuardada;
  selectMoneda.addEventListener('change', () => {
   localStorage.setItem('moneda', selectMoneda.value);
-  alert(`Moneda cambiada a ${selectMoneda.value}. La página se recargará.`);
-  location.reload();  // <-- fuerza recarga para actualizar todos los saldos/formateos
+  alert(`Moneda cambiada a ${selectMoneda.value}. Actualizando valores…`);
+  // Disparamos el evento que escucharán otras secciones
+  document.dispatchEvent(new Event('currencyChanged'));
 });
 
 
