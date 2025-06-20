@@ -234,7 +234,13 @@ tarjetas.forEach(t => {
     inputCuo.value = 1;
     renderGastos();
   });
-
+  
+// Al cambiar moneda, re-renderizamos tarjetas y gastos para reflejar nuevos símbolos
+  document.addEventListener('currencyChanged', () => {
+  renderTarjetas();
+  renderGastos();
+});
+  
   // 7) Botones dinámicos (pagada y eliminar)
   ulTarjetas.addEventListener('click', e => {
     const li = e.target.closest('li');
@@ -283,9 +289,5 @@ tarjetas.forEach(t => {
   renderGastos();
 });
 
-// Al cambiar moneda, re-renderizamos tarjetas y gastos para reflejar nuevos símbolos
-  document.addEventListener('currencyChanged', () => {
-  renderTarjetas();
-  renderGastos();
-});
+
 
