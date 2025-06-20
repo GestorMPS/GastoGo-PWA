@@ -64,6 +64,13 @@ document.addEventListener('DOMContentLoaded', function () {
     // Y “Finalizar Mes” también
     btnFinalizarMes.disabled = totalIngresos <= 0 || gastos.length === 0;
   }
+  // Al cambiar la moneda, recargamos saldo y re-renderizamos cobertura de gastos
+    document.addEventListener('currencyChanged', () => {
+  // si estás en la pestaña Gastos, refrescamos el saldo
+    recargarSaldoDesdeLocalStorage();
+  // opcional: volver a renderizar la tabla si formateas montos allí
+  });
+
 
   // 6. Listener para que, cada vez que se haga clic en la pestaña “Gastos”, recargue el saldo
   tabBotonGastos.addEventListener('click', function () {
