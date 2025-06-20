@@ -282,3 +282,10 @@ tarjetas.forEach(t => {
   renderTarjetas();
   renderGastos();
 });
+
+// Al cambiar moneda, re-renderizamos tarjetas y gastos para reflejar nuevos símbolos
+  document.addEventListener('currencyChanged', () => {
+  renderTarjetas();
+  renderGastos();
+});
+
