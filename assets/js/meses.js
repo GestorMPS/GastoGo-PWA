@@ -38,10 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
       contenedorTabla.hidden = true;
       return;
     }
-    // En meses.js, justo después de definir renderMeses():
-   document.addEventListener('currencyChanged', () => {
-    renderMeses();
-  });
+
 
     // Si hay meses, ocultamos el mensaje y mostramos la tabla
     mensajeSinMeses.hidden = true;
@@ -59,6 +56,10 @@ document.addEventListener('DOMContentLoaded', function () {
       `;
       tablaMesesBody.appendChild(tr);
     });
+        // En meses.js, justo después de definir renderMeses():
+   document.addEventListener('currencyChanged', () => {
+    renderMeses();
+  });
   }
 
   // 2) Intentar cargar meses previos de localStorage (si existen)
