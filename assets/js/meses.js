@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   );
 
   // 2) Función que dibuja los meses en la tabla
-  function renderMeses() {
+  function renderizarMeses() {
     tablaMesesBody.innerHTML = '';
     if (mesesFinalizados.length === 0) {
       mensajeSinMeses.hidden = false;
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('nuevoMesFinalizado', (e) => {
     mesesFinalizados.push(e.detail); // e.detail = { mes, totalIngresos, totalGastos, saldoFinal }
     localStorage.setItem('mesesFinalizados', JSON.stringify(mesesFinalizados));
-    renderMeses();
+    renderizarMeses();
   });
 
   // 4) Formatear moneda dinámico
@@ -56,10 +56,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // 5) Inicialmente dibujamos
-  renderMeses();
+  renderizarMeses();
 
   // 6) Cuando cambie la moneda, re-renderizamos
   document.addEventListener('currencyChanged', () => {
-    renderMeses();
+    renderizarMeses();
   });
 });
