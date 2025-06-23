@@ -82,9 +82,10 @@ document.addEventListener('DOMContentLoaded', function () {
     localStorage.setItem('mesesFinalizados', JSON.stringify(mesesFinalizados));
     // Re-renderizar
     renderizarMeses();
-     // En meses.js, justo después de definir renderMeses():
+  });
+    // En meses.js, justo después de definir renderMeses():
    document.addEventListener('currencyChanged', () => {
     renderMeses();
-  });
+     });
 });
     
