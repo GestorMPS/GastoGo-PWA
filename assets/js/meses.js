@@ -71,12 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Renderizar inicialmente
   renderizarMeses();
-  
-        // En meses.js, justo después de definir renderMeses():
-   document.addEventListener('currencyChanged', () => {
-    renderMeses();
-  });
-  
+   
   // 3) “Escuchar” un evento custom que envíe un nuevo mes desde “Gastos”
   //    Este evento debe dispararse cuando el usuario haga clic en “Finalizar Mes” 
   //    y enviará un objeto con la información del mes actual.
@@ -87,6 +82,9 @@ document.addEventListener('DOMContentLoaded', function () {
     localStorage.setItem('mesesFinalizados', JSON.stringify(mesesFinalizados));
     // Re-renderizar
     renderizarMeses();
+     // En meses.js, justo después de definir renderMeses():
+   document.addEventListener('currencyChanged', () => {
+    renderMeses();
   });
 });
     
