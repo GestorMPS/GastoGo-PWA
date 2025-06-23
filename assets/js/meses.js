@@ -83,9 +83,5 @@ document.addEventListener('DOMContentLoaded', function () {
     // Re-renderizar
     renderizarMeses();
   });
-    // En meses.js, justo después de definir renderMeses():
-   document.addEventListener('currencyChanged', () => {
-    renderMeses();
-     });
 });
     
