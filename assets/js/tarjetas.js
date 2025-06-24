@@ -186,7 +186,6 @@ tarjetas.forEach(t => {
     const msg = `¿Crear tarjeta "${alias} (${ent})" con cierre día ${dia}?`;
     if (!confirm(msg)) return;
      // resto del código…
-   });
 
     
     inputEntidad.value = '';
