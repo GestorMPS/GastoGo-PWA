@@ -196,7 +196,7 @@ tarjetas.forEach(t => {
 
   // 6) Validaciones y listener para registrar gasto
   function toggleBtnGast() {
-    btnGuardarG.disabled = !selectTarjG.value
+    btn.disabled = !selectTarjG.value
       || !inputFecha.value
       || +inputMonto.value <= 0
       || +inputCuo.value < 1;
@@ -205,6 +205,11 @@ tarjetas.forEach(t => {
   toggleBtnGast();
 
   btnGuardarG.addEventListener('click', () => {
+    
+    const msg = `¿Confirmas registrar gasto de ${formatearMoneda(montoTotal)}
+    en ${cuotasPendientes} cuotas (${formatearMoneda(montoCuota)} cada una) para la tarjeta ${tarjeta.alias}?`;
+    if (!confirm(msg)) return;
+    
     const tarjetaId = +selectTarjG.value;
     const fechaCompra = inputFecha.value;
     const detalle     = inputDet.value.trim();
