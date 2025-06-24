@@ -179,16 +179,13 @@ tarjetas.forEach(t => {
   [inputEntidad, inputAlias, inputCierre].forEach(el => el.addEventListener('input', toggleBtnTarj));
   toggleBtnTarj();
 
-    btnGuardarTarj.addEventListener('click', () => {
-    const ent = inputEntidad.value.trim();
-    const alias = inputAlias.value.trim();
-    const dia = inputCierre.value;
-    const msg = `¿Crear tarjeta "${alias} (${ent})" con cierre día ${dia}?`;
-    if (!confirm(msg)) return;
-     // resto del código…
-   });
-
-    
+  btnGuardarTarj.addEventListener('click', () => {
+    tarjetas.push({
+      id: Date.now(),
+      entidad: inputEntidad.value.trim(),
+      alias: inputAlias.value.trim(),
+      diaCierre: +inputCierre.value
+    });
     inputEntidad.value = '';
     inputAlias.value = '';
     inputCierre.value = '';
@@ -291,5 +288,3 @@ tarjetas.forEach(t => {
   renderTarjetas();
   renderGastos();
 });
-
-
