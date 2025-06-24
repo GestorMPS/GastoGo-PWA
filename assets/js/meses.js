@@ -1,70 +1,93 @@
-document.addEventListener('DOMContentLoaded', () => {
-  // Referencias al DOM
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Referencias a elementos de “Meses”
+  const contenedorTabla = document.getElementById('contenedor-meses-tabla');
   const tablaMesesBody = document.querySelector('#tabla-meses tbody');
-  const mensajeSinMeses  = document.getElementById('mensaje-sin-meses');
+  const mensajeSinMeses = document.getElementById('mensaje-sin-meses');
 
-  // 1) Cargamos el array de meses finalizados
-  let mesesFinalizados = JSON.parse(
-  localStorage.getItem('mesesFinalizados') || '[]'
-);
+  // Array que almacenará los meses finalizados
+  // Cada objeto tendrá: { mes: 'Junio 2025', totalIngresos: 50000, totalGastos: 32000, saldoFinal: 18000 }
+  let mesesFinalizados = [];
 
-  // 2) Función que dibuja los meses en la tabla
+  // Función para formatear moneda (igual que en gastos)
+  function formatearMoneda(valor) {
+  // Leemos la moneda actual
+  const m = localStorage.getItem('moneda') || 'ARS';
+  let symbol, locale;
+  switch (m) {
+    case 'USD':
+      symbol = 'US$';
+      locale = 'en-US';
+      break;
+    case 'EUR':
+      symbol = '€';
+      locale = 'de-DE';
+      break;
+    default:
+      symbol = '$';
+      locale = 'es-AR';
+  }
+  return symbol + valor.toLocaleString(locale, { minimumFractionDigits: 2 });
+}
+
+
+  // 1) Función para renderizar el historial de meses
   function renderizarMeses() {
-    tablaMesesBody.innerHTML = '';
+    // Si no hay meses, mostramos el mensaje y ocultamos la tabla
     if (mesesFinalizados.length === 0) {
       mensajeSinMeses.hidden = false;
-    } else {
-      mensajeSinMeses.hidden = true;
-      mesesFinalizados.forEach((m) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${m.mes}</td>
-          <td>${formatearMoneda(m.totalIngresos)}</td>
-          <td>${formatearMoneda(m.totalGastos)}</td>
-          <td>${formatearMoneda(m.saldoFinal)}</td>
-        `;
-        tablaMesesBody.appendChild(tr);
-      });
+      contenedorTabla.hidden = true;
+      return;
+    }
+
+
+    // Si hay meses, ocultamos el mensaje y mostramos la tabla
+    mensajeSinMeses.hidden = true;
+    contenedorTabla.hidden = false;
+    // Limpiamos el cuerpo de la tabla
+    tablaMesesBody.innerHTML = '';
+    // Agregamos una fila por cada mes
+    mesesFinalizados.forEach((m) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${m.mes}</td>
+        <td>${formatearMoneda(m.totalIngresos)}</td>
+        <td>${formatearMoneda(m.totalGastos)}</td>
+        <td>${formatearMoneda(m.saldoFinal)}</td>
+      `;
+      tablaMesesBody.appendChild(tr);
+    });
+
+  }
+
+  // 2) Intentar cargar meses previos de localStorage (si existen)
+  const datosGuardados = localStorage.getItem('mesesFinalizados');
+  if (datosGuardados) {
+    try {
+      mesesFinalizados = JSON.parse(datosGuardados);
+    } catch (e) {
+      mesesFinalizados = [];
     }
   }
 
-  // 3) Listener para cuando se finaliza un mes en Gastos
-  document.addEventListener('nuevoMesFinalizado', (e) => {
-    mesesFinalizados.push(e.detail); // e.detail = { mes, totalIngresos, totalGastos, saldoFinal }
-    localStorage.setItem('mesesFinalizados', JSON.stringify(mesesFinalizados));
-    renderizarMeses();
+  // Renderizar inicialmente
+  renderizarMeses();
+  
+        // En meses.js, justo después de definir renderMeses():
+   document.addEventListener('currencyChanged', () => {
+    renderMeses();
   });
   
-  // 4) Volver a formatear al cambiar la moneda
-  document.addEventListener('currencyChanged', () => {
-    renderizarMeses();
- });
-
-
-  // 4) Formatear moneda dinámico
-  function formatearMoneda(valor) {
-    const m = localStorage.getItem('moneda') || 'ARS';
-    let symbol, locale;
-    switch (m) {
-      case 'USD':
-        symbol = 'US$';
-        locale = 'en-US';
-        break;
-      case 'EUR':
-        symbol = '€';
-        locale = 'de-DE';
-        break;
-      default:
-        symbol = '$';
-        locale = 'es-AR';
-    }
-    return symbol + Number(valor).toLocaleString(locale, { minimumFractionDigits: 2 });
-  }
-
-  // 5) Inicialmente dibujamos
-  renderizarMeses();
-  // 6) Cuando cambie la moneda, re-renderizamos
-  document.addEventListener('currencyChanged', () => {
+  // 3) “Escuchar” un evento custom que envíe un nuevo mes desde “Gastos”
+  //    Este evento debe dispararse cuando el usuario haga clic en “Finalizar Mes” 
+  //    y enviará un objeto con la información del mes actual.
+  document.addEventListener('nuevoMesFinalizado', function (e) {
+    const mesNuevo = e.detail; // { mes, totalIngresos, totalGastos, saldoFinal }
+    mesesFinalizados.push(mesNuevo);
+    // Guardar en localStorage
+    localStorage.setItem('mesesFinalizados', JSON.stringify(mesesFinalizados));
+    // Re-renderizar
     renderizarMeses();
   });
 });
+    
