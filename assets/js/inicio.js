@@ -129,6 +129,10 @@ function formatearMoneda(valor) {
           return;
         }
 
+        const confirmMsg = `¿Confirmas agregar ingreso extra de ${formatearMoneda(monto)} con descripción "${desc}"?`;
+        if (!confirm(confirmMsg)) return;
+
+
         // Crear objeto extra y agregarlo al array
         const extra = { id: nextExtraId++, descripcion: desc, monto };
         ingresosExtras.push(extra);
