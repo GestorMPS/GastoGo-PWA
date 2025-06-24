@@ -210,7 +210,10 @@ tarjetas.forEach(t => {
     const detalle     = inputDet.value.trim();
     const montoTotal  = +inputMonto.value;
     const cuotasPendientes = +inputCuo.value; // renombramos
-
+    
+  const msg = `¿Confirmas registrar gasto de ${formatearMoneda(montoTotal)} en ${cuotasPendientes} cuotas (${formatearMoneda(montoCuota)} cada una) para la tarjeta ${tarjeta.alias}?`;
+  if (!confirm(msg)) return;
+    
     // Calcular primer vencimiento y ciclo asignado
     const tarjeta = tarjetas.find(t => t.id === tarjetaId);
     const { inicio, fin } = calcularCiclos(tarjeta.diaCierre);
