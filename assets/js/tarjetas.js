@@ -270,13 +270,19 @@ tarjetas.forEach(t => {
   renderGastos();
 }
 
-
-    if (e.target.classList.contains('btn-eliminar-tarjeta')) {
-      tarjetas = tarjetas.filter(t => t.id !== id);
-      gastos    = gastos.filter(g => g.tarjetaId !== id);
+    
+     
+   if (e.target.classList.contains('btn-eliminar-tarjeta')) {
+  const t = tarjetas.find(x => x.id === id);
+  if (!confirm(`¿Eliminar la tarjeta "${t.entidad} (${t.alias})"? Esta acción borrará todos sus gastos.`)) {
+    return;
+  }
+  // eliminar…
+     
       renderTarjetas();
       renderGastos();
-    }
+       }
+    
   });
   tbodyGastos.addEventListener('click', e => {
     if (e.target.classList.contains('btn-eliminar-gasto-tarjeta')) {
