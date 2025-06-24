@@ -64,8 +64,4 @@ document.addEventListener('DOMContentLoaded', () => {
   // 5) Inicialmente dibujamos
   renderizarMeses();
 
-  // 6) Cuando cambie la moneda, re-renderizamos
-  document.addEventListener('currencyChanged', () => {
-    renderizarMeses();
-  });
 });
