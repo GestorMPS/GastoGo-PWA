@@ -34,6 +34,12 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('mesesFinalizados', JSON.stringify(mesesFinalizados));
     renderizarMeses();
   });
+  
+  // 4) Volver a formatear al cambiar la moneda
+  document.addEventListener('currencyChanged', () => {
+    renderizarMeses();
+ });
+
 
   // 4) Formatear moneda dinámico
   function formatearMoneda(valor) {
