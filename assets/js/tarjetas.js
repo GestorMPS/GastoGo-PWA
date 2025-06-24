@@ -205,7 +205,6 @@ tarjetas.forEach(t => {
   toggleBtnGast();
 
   btnGuardarG.addEventListener('click', () => {
-    
     const msg = `¿Confirmas registrar gasto de ${formatearMoneda(montoTotal)}
     en ${cuotasPendientes} cuotas (${formatearMoneda(montoCuota)} cada una) para la tarjeta ${tarjeta.alias}?`;
     if (!confirm(msg)) return;
@@ -222,8 +221,6 @@ tarjetas.forEach(t => {
     const pv = calcularPrimerVencimiento(fechaCompra, tarjeta.diaCierre);
     const cicloAsign = (pv >= inicio && pv <= fin) ? 'Actual' : 'Próximo';
     
-    const msg = `¿Confirmas registrar gasto de ${formatearMoneda(montoTotal)} en ${cuotasPendientes} cuotas (${formatearMoneda(montoCuota)} cada una) para la tarjeta ${tarjeta.alias}?`;
-    if (!confirm(msg)) return;
     
     gastos.push({
       id: Date.now(),
@@ -235,7 +232,7 @@ tarjetas.forEach(t => {
       primerVencimiento: pv.toISOString(),
       cicloAsignado: cicloAsign
     });
-
+    
     // Limpiar form
     selectTarjG.value = '';
     inputFecha.value = '';
