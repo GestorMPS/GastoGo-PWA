@@ -5,8 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 1) Cargamos el array de meses finalizados
   let mesesFinalizados = JSON.parse(
-    localStorage.getItem('mesesFinalizados') || '[]'
-  );
+  localStorage.getItem('mesesFinalizados') || '[]'
+);
 
   // 2) Función que dibuja los meses en la tabla
   function renderizarMeses() {
@@ -63,5 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 5) Inicialmente dibujamos
   renderizarMeses();
-
+  // 6) Cuando cambie la moneda, re-renderizamos
+  document.addEventListener('currencyChanged', () => {
+    renderizarMeses();
+  });
 });
