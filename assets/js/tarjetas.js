@@ -186,6 +186,7 @@ tarjetas.forEach(t => {
     const msg = `¿Crear tarjeta "${alias} (${ent})" con cierre día ${dia}?`;
     if (!confirm(msg)) return;
      // resto del código…
+   });
 
     
     inputEntidad.value = '';
@@ -196,7 +197,7 @@ tarjetas.forEach(t => {
 
   // 6) Validaciones y listener para registrar gasto
   function toggleBtnGast() {
-    btn.disabled = !selectTarjG.value
+    btnGuardarG.disabled = !selectTarjG.value
       || !inputFecha.value
       || +inputMonto.value <= 0
       || +inputCuo.value < 1;
@@ -205,23 +206,18 @@ tarjetas.forEach(t => {
   toggleBtnGast();
 
   btnGuardarG.addEventListener('click', () => {
-    const msg = `¿Confirmas registrar gasto de ${formatearMoneda(montoTotal)}
-    en ${cuotasPendientes} cuotas (${formatearMoneda(montoCuota)} cada una) para la tarjeta ${tarjeta.alias}?`;
-    if (!confirm(msg)) return;
-    
     const tarjetaId = +selectTarjG.value;
     const fechaCompra = inputFecha.value;
     const detalle     = inputDet.value.trim();
     const montoTotal  = +inputMonto.value;
     const cuotasPendientes = +inputCuo.value; // renombramos
-    
+
     // Calcular primer vencimiento y ciclo asignado
     const tarjeta = tarjetas.find(t => t.id === tarjetaId);
     const { inicio, fin } = calcularCiclos(tarjeta.diaCierre);
     const pv = calcularPrimerVencimiento(fechaCompra, tarjeta.diaCierre);
     const cicloAsign = (pv >= inicio && pv <= fin) ? 'Actual' : 'Próximo';
-    
-    
+
     gastos.push({
       id: Date.now(),
       tarjetaId,
@@ -232,7 +228,7 @@ tarjetas.forEach(t => {
       primerVencimiento: pv.toISOString(),
       cicloAsignado: cicloAsign
     });
-    
+
     // Limpiar form
     selectTarjG.value = '';
     inputFecha.value = '';
@@ -275,19 +271,13 @@ tarjetas.forEach(t => {
   renderGastos();
 }
 
-    
-     
-   if (e.target.classList.contains('btn-eliminar-tarjeta')) {
-  const t = tarjetas.find(x => x.id === id);
-  if (!confirm(`¿Eliminar la tarjeta "${t.entidad} (${t.alias})"? Esta acción borrará todos sus gastos.`)) {
-    return;
-  }
-  // eliminar…
-     
+
+    if (e.target.classList.contains('btn-eliminar-tarjeta')) {
+      tarjetas = tarjetas.filter(t => t.id !== id);
+      gastos    = gastos.filter(g => g.tarjetaId !== id);
       renderTarjetas();
       renderGastos();
-       }
-    
+    }
   });
   tbodyGastos.addEventListener('click', e => {
     if (e.target.classList.contains('btn-eliminar-gasto-tarjeta')) {
@@ -301,6 +291,5 @@ tarjetas.forEach(t => {
   renderTarjetas();
   renderGastos();
 });
-
 
 
