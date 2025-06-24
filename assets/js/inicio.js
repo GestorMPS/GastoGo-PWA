@@ -78,24 +78,24 @@ function formatearMoneda(valor) {
 
       // 3) Al hacer clic en “Guardar Ingreso Principal”
       btnGuardarPrincipal.addEventListener('click', function () {
-        ingresoPrincipal = parseFloat(ingresoPrincipalInput.value) || 0;
-        if (ingresoPrincipal <= 0) {
-          alert('Ingresa un monto válido para el ingreso principal.');
-          return;
-        }
-        // Bloquear input y botón principal
+        const valor = parseFloat(ingresoPrincipalInput.value) || 0;
+        if (valor <= 0) {
+         alert('Ingresa un monto válido para el ingreso principal.');
+         return;
+       }
+          // Aquí pedimos confirmación
+        const ok = confirm(`¿Estás seguro de que deseas fijar tu ingreso principal en ${formatearMoneda(valor)}?`);
+        if (!ok) return;
+
+          // Si presionó “Aceptar”, seguimos
+        ingresoPrincipal = valor;
         ingresoPrincipalInput.disabled = true;
-        btnGuardarPrincipal.disabled = true;
-
-        // Guardar en localStorage el ingreso principal (sin extras todavía)
+        btnGuardarPrincipal.disabled  = true;
         localStorage.setItem('totalIngresosActual', ingresoPrincipal);
-
-        // Mostrar sección de ingresos extras
-        contenidoExtras.hidden = false;
-
-        // Actualizar el saldo total
+        contenidoExtras.hidden        = false;
         actualizarSaldoTotal();
       });
+
 
       // 4) Mostrar u ocultar formulario para Ingreso Extra
       let formularioMostrado = false;
