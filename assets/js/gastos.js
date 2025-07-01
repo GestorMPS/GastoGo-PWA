@@ -110,36 +110,24 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   // 10. Al hacer clic en “Guardar Gasto”
- btnGuardarG.addEventListener('click', () => {
-  const tarjetaId = +selectTarjG.value;
-  const fechaCompra = inputFecha.value;
-  const detalle     = inputDet.value.trim();
-  const montoTotal  = +inputMonto.value;
-  const cuotasPendientes = +inputCuo.value;
-  const montoCuota = montoTotal / cuotasPendientes;
-  // Mensaje de confirmación
-  const tarjeta = tarjetas.find(t => t.id === tarjetaId);
-  const msg = 
-    `¿Registrar gasto de ${formatearMoneda(montoTotal)} en ${cuotasPendientes} cuotas ` +
-    `(${formatearMoneda(montoCuota)} cada una) en tarjeta "${tarjeta.alias}"?`;
-  if (!confirm(msg)) return;
-
-  // Si confirma, calculamos primer vencimiento y agregamos:
-  const pv = calcularPrimerVencimiento(fechaCompra, tarjeta.diaCierre);
-  gastos.push({
-    id: Date.now(),
-    tarjetaId,
-    fechaCompra,
-    detalle,
-    cuotasPendientes,
-    montoCuota,
-    primerVencimiento: pv.toISOString(),
-    cicloAsignado: (pv >= /* inicio y fin ciclo */) ? 'Actual' : 'Próximo'
-  });
-  renderGastos();
-  renderTarjetas();
-});
-
+  btnGuardarGasto.addEventListener('click', function () {
+    const categoriaVal = selectCategoria.value;
+    const subcategoriaVal = selectSubcategoria.value || '—';
+    const montoVal = parseFloat(inputMontoGasto.value) || 0;
+    if (!categoriaVal || montoVal <= 0) {
+      alert('Selecciona categoría y un monto válido.');
+      return;
+    }
+    // Crear objeto gasto
+    const fecha = new Date().toLocaleDateString('es-AR');
+    const gastoObj = {
+      id: nextGastoId++,
+      fecha,
+      categoria: categoriaVal,
+      subcategoria: subcategoriaVal,
+      monto: montoVal,
+    };
+    gastos.push(gastoObj);
 
     // Insertar fila en la tabla
     const tr = document.createElement('tr');
