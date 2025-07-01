@@ -141,8 +141,7 @@ btnGuardarGasto.addEventListener('click', () => {
     primerVencimiento: pv.toISOString(),
     cicloAsignado: cicloAsign
   // Volvemos a renderizar listados
-  renderGastos();
-  renderTarjetas();
+ 
   });
 
 
