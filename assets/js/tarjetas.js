@@ -180,17 +180,23 @@ tarjetas.forEach(t => {
   toggleBtnTarj();
 
   btnGuardarTarj.addEventListener('click', () => {
-    tarjetas.push({
-      id: Date.now(),
-      entidad: inputEntidad.value.trim(),
-      alias: inputAlias.value.trim(),
-      diaCierre: +inputCierre.value
-    });
+    const ent   = inputEntidad.value.trim();
+    const alias = inputAlias.value.trim();
+    const cierre= +inputCierre.value;
+    // Mensaje de confirmación
+    const msg = `¿Crear tarjeta "${alias} (${ent})" con día de cierre ${cierre}?`;
+    if (!confirm(msg)) return;
+
+    // Si confirma, procedemos:
+    const nueva = { id: Date.now(), entidad: ent, alias, diaCierre: cierre };
+    tarjetas.push(nueva);
+    localStorage.setItem('tarjetas', JSON.stringify(tarjetas));
     inputEntidad.value = '';
-    inputAlias.value = '';
-    inputCierre.value = '';
+    inputAlias.value   = '';
+    inputCierre.value  = '';
     renderTarjetas();
   });
+
 
   // 6) Validaciones y listener para registrar gasto
   function toggleBtnGast() {
