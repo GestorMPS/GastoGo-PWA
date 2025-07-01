@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   // 10. Al hacer clic en “Guardar Gasto”
-btnGuardarG.addEventListener('click', () => {
+btnGuardarGasto.addEventListener('click', () => {
     const tarjetaId       = +selectTarjG.value;
     const fechaCompra     = inputFecha.value;
     const detalle         = inputDet.value.trim();
