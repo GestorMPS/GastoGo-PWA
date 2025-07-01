@@ -109,41 +109,44 @@ document.addEventListener('DOMContentLoaded', function () {
     selectSubcategoria.disabled = opcionesSub.length === 0;
   });
 
-  // 10. Al hacer clic en “Guardar Gasto”
-  btnGuardarGasto.addEventListener('click', () => {
-    const tarjetaId = +selectTarjG.value;
-    const fechaCompra = inputFecha.value;
-    const detalle     = inputDet.value.trim();
-    const montoTotal  = +inputMonto.value;
-    const cuotasPendientes = +inputCuo.value;
-    const montoCuota = montoTotal / cuotasPendientes;
-      // Mensaje de confirmación
-    const tarjeta = tarjetas.find(t => t.id === tarjetaId);
-    const msg = 
-      `¿Registrar gasto de ${formatearMoneda(montoTotal)} en ${cuotasPendientes} cuotas ` +
-      `(${formatearMoneda(montoCuota)} cada una) en tarjeta "${tarjeta.alias}"?`;
-    if (!confirm(msg)) return;
+ // 10. Al hacer clic en “Guardar Gasto”
+btnGuardarGasto.addEventListener('click', () => {
+  const tarjetaId        = +selectTarjG.value;
+  const fechaCompra      = inputFecha.value;
+  const detalle          = inputDet.value.trim();
+  const montoTotal       = +inputMonto.value;
+  const cuotasPendientes = +inputCuo.value;
+  const montoCuota       = montoTotal / cuotasPendientes;
+  const tarjeta          = tarjetas.find(t => t.id === tarjetaId);
 
-    // Si confirma, calculamos primer vencimiento y agregamos:
-    const pv = calcularPrimerVencimiento(fechaCompra, tarjeta.diaCierre);
-    gastos.push({
-      id: Date.now(),
-      tarjetaId,
-      fechaCompra,
-      detalle,
-      cuotasPendientes,
-      montoCuota,
-      primerVencimiento: pv.toISOString(),
-      cicloAsignado: (pv >= /* inicio y fin ciclo */) ? 'Actual' : 'Próximo'
+  // Mensaje de confirmación
+  const msg =
+    `¿Registrar gasto de ${formatearMoneda(montoTotal)} en ${cuotasPendientes} cuotas ` +
+    `(${formatearMoneda(montoCuota)} cada una) en tarjeta "${tarjeta.alias}"?`;
+  if (!confirm(msg)) return;
+
+  // Si confirma, calculamos primer vencimiento y ciclo
+  const pv = calcularPrimerVencimiento(fechaCompra, tarjeta.diaCierre);
+  const { inicio, fin } = calcularCiclos(tarjeta.diaCierre);
+  const cicloAsign = (pv >= inicio && pv <= fin) ? 'Actual' : 'Próximo';
+
+  // Agregamos el gasto al array
+  gastos.push({
+    id: Date.now(),
+    tarjetaId,
+    fechaCompra,
+    detalle,
+    cuotasPendientes,
+    montoCuota,
+    primerVencimiento: pv.toISOString(),
+    cicloAsignado: cicloAsign
   });
+
+  // Volvemos a renderizar listados
   renderGastos();
   renderTarjetas();
+});
 
-
-
-    // Volvemos a renderizar listados
-    renderGastos();
-    renderTarjetas();
 
     // Insertar fila en la tabla
     const tr = document.createElement('tr');
