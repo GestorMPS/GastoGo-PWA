@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
   recargarSaldoDesdeLocalStorage();
 
   // 8. Habilitar/deshabilitar “Guardar Gasto” según categoría y monto válidos
-  function toggleGasto() {
+  function toggleBtnGuardarGasto() {
     const categoriaVal = selectCategoria.value;
     const montoVal = parseFloat(inputMontoGasto.value);
     // Además, si no hay ingreso guardado, que quede siempre deshabilitado
