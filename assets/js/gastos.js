@@ -145,7 +145,7 @@ btnGuardarGasto.addEventListener('click', () => {
   // Volvemos a renderizar listados
   renderGastos();
   renderTarjetas();
-});
+
 
 
     // Insertar fila en la tabla
