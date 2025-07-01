@@ -140,8 +140,6 @@ document.addEventListener('DOMContentLoaded', function () {
   renderTarjetas();
 });
 
-    gastos.push(gastoObj);
-
     // Insertar fila en la tabla
     const tr = document.createElement('tr');
     tr.dataset.id = gastoObj.id;
