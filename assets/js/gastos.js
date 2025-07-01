@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
     inputMontoGasto.disabled = bloquear;
     // Aunque el botón solo se habilita cuando hay categoría y monto, si bloquear=true,
     // forzamos Gasto.disabled = true:
-    Gasto.disabled = bloquear || Gasto.disabled;
+    gastos.disabled = bloquear || gastos.disabled;
     // Y “Finalizar Mes” también
     btnFinalizarMes.disabled = totalIngresos <= 0 || gastos.length === 0;
   }
@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const montoVal = parseFloat(inputMontoGasto.value);
     // Además, si no hay ingreso guardado, que quede siempre deshabilitado
     const ingresosGuardados = parseFloat(localStorage.getItem('totalIngresosActual')) || 0;
-    Gasto.disabled = !categoriaVal || isNaN(montoVal) || montoVal <= 0 || ingresosGuardados <= 0;
+    gastos.disabled = !categoriaVal || isNaN(montoVal) || montoVal <= 0 || ingresosGuardados <= 0;
   }
   selectCategoria.addEventListener('change', toggleBtnGuardarGasto);
   inputMontoGasto.addEventListener('input', toggleBtnGuardarGasto);
