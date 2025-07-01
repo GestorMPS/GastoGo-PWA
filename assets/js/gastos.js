@@ -110,28 +110,22 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   // 10. Al hacer clic en “Guardar Gasto”
-btnGuardarGasto.addEventListener('click', () => {
-    const tarjetaId       = +selectTarjG.value;
-    const fechaCompra     = inputFecha.value;
-    const detalle         = inputDet.value.trim();
-    const montoTotal      = +inputMonto.value;
-    const cuotasPendientes= +inputCuo.value;
-    const montoCuota      = montoTotal / cuotasPendientes;
-    const tarjeta         = tarjetas.find(t => t.id === tarjetaId);
-
+  btnGuardarGasto.addEventListener('click', () => {
+    const tarjetaId = +selectTarjG.value;
+    const fechaCompra = inputFecha.value;
+    const detalle     = inputDet.value.trim();
+    const montoTotal  = +inputMonto.value;
+    const cuotasPendientes = +inputCuo.value;
+    const montoCuota = montoTotal / cuotasPendientes;
+      // Mensaje de confirmación
+    const tarjeta = tarjetas.find(t => t.id === tarjetaId);
     const msg = 
-     `¿Registrar gasto de ${formatearMoneda(montoTotal)} en ${cuotasPendientes} cuotas ` +
-     `(${formatearMoneda(montoCuota)} cada una) en tarjeta "${tarjeta.alias}"?`;
+      `¿Registrar gasto de ${formatearMoneda(montoTotal)} en ${cuotasPendientes} cuotas ` +
+      `(${formatearMoneda(montoCuota)} cada una) en tarjeta "${tarjeta.alias}"?`;
     if (!confirm(msg)) return;
 
-      // Calculamos fecha de primer vencimiento
+    // Si confirma, calculamos primer vencimiento y agregamos:
     const pv = calcularPrimerVencimiento(fechaCompra, tarjeta.diaCierre);
-
-     // Determinamos ciclo asignado según pv vs ciclo de tarjeta
-    const { inicio, fin } = calcularCiclos(tarjeta.diaCierre);
-    const cicloAsign = (pv >= inicio && pv <= fin) ? 'Actual' : 'Próximo';
-
-     // Añadimos el gasto al array
     gastos.push({
       id: Date.now(),
       tarjetaId,
@@ -140,8 +134,12 @@ btnGuardarGasto.addEventListener('click', () => {
       cuotasPendientes,
       montoCuota,
       primerVencimiento: pv.toISOString(),
-      cicloAsignado: cicloAsign
+      cicloAsignado: (pv >= /* inicio y fin ciclo */) ? 'Actual' : 'Próximo'
   });
+  renderGastos();
+  renderTarjetas();
+
+
 
     // Volvemos a renderizar listados
     renderGastos();
