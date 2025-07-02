@@ -39,7 +39,6 @@ btnGuardarTarj.addEventListener('click', () => {
   };
 
   // Guardar en localStorage
-  const tarjetas = JSON.parse(localStorage.getItem('tarjetas')) || [];
   tarjetas.push(nuevaTarjeta);
   localStorage.setItem('tarjetas', JSON.stringify(tarjetas));
 
