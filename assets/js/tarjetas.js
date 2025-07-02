@@ -23,14 +23,13 @@ btnGuardarTarj.addEventListener('click', () => {
   const alias   = inputAlias.value.trim();
   const cierre  = parseInt(inputCierre.value);
 
-  // Mensaje de confirmación
   const msg = `¿Deseás guardar la tarjeta "${alias}" de ${entidad} con cierre el día ${cierre}?`;
   if (!confirm(msg)) {
-    toggleBtnGuardarTarj(); // Revalidar si canceló
+    toggleBtnGuardarTarj();
     return;
   }
 
-  // Crear tarjeta y guardar
+  // Crear objeto tarjeta
   const nuevaTarjeta = {
     id: Date.now(),
     entidad,
@@ -38,7 +37,7 @@ btnGuardarTarj.addEventListener('click', () => {
     diaCierre: cierre
   };
 
-  // Guardar en localStorage
+  // Guardar en el array y en localStorage
   tarjetas.push(nuevaTarjeta);
   localStorage.setItem('tarjetas', JSON.stringify(tarjetas));
 
@@ -46,14 +45,12 @@ btnGuardarTarj.addEventListener('click', () => {
   inputEntidad.value = '';
   inputAlias.value = '';
   inputCierre.value = '';
-
-  // Revalidar botón
   toggleBtnGuardarTarj();
 
   alert('Tarjeta guardada correctamente.');
 
-  // Si tenés una función para renderizar la lista, llamala acá:
-  // renderTarjetas(); 
+  // (Opcional) Si tenés función para dibujar tarjetas en pantalla:
+  // renderTarjetas();
 });
 
   
