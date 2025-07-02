@@ -204,11 +204,7 @@ btnGuardarGasto.addEventListener('click', () => {
 
   gastos.push(gasto);
   localStorage.setItem('gastos', JSON.stringify(gastos));
-
-  // Refrescar tabla o vista
-  toggleBtnGuardarGastoTarjeta();
   renderizarGastosTarjeta();
-
 
   // Limpiar formulario
   selectTarjG.value = '';
@@ -217,6 +213,7 @@ btnGuardarGasto.addEventListener('click', () => {
   inputMonto.value = '';
   inputCuo.value = '';
   btnGuardarGasto.disabled = true;
+  toggleBtnGuardarGastoTarjeta();
 });
 
   
