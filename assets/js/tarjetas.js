@@ -8,6 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const inputCierre     = document.getElementById('input-dia-cierre');
   const btnGuardarTarj  = document.getElementById('btn-guardar-tarjeta');
   const ulTarjetas      = document.getElementById('ul-tarjetas');
+  const selectTarjG = document.getElementById('select-tarjeta-gasto');
+  const inputFecha  = document.getElementById('input-fecha-compra');
+  const inputDet    = document.getElementById('input-detalle-gasto');
+  const inputMonto  = document.getElementById('input-monto-gasto-tarjeta');
+  const inputCuo    = document.getElementById('input-cuotas-gasto');
   const btnGuardarGasto = document.getElementById('btn-guardar-gasto-tarjeta');
 
   // 3. Validar inputs para habilitar botón
