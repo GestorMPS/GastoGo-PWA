@@ -29,6 +29,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   btnGuardarGasto.disabled = !habilitar;
 }
+
+  selectTarjG.addEventListener('change', toggleBtnGuardarGastoTarjeta);
+  inputFecha.addEventListener('input', toggleBtnGuardarGastoTarjeta);
+  inputDet.addEventListener('input', toggleBtnGuardarGastoTarjeta);
+  inputMonto.addEventListener('input', toggleBtnGuardarGastoTarjeta);
+  inputCuo.addEventListener('input', toggleBtnGuardarGastoTarjeta);
   inputEntidad.addEventListener('input', toggleBtnGuardarTarj);
   inputAlias.addEventListener('input', toggleBtnGuardarTarj);
   inputCierre.addEventListener('input', toggleBtnGuardarTarj);
