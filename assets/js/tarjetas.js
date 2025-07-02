@@ -18,8 +18,45 @@ document.addEventListener('DOMContentLoaded', () => {
   inputAlias.addEventListener('input', toggleBtnGuardarTarj);
   inputCierre.addEventListener('input', toggleBtnGuardarTarj);
 
-  // Inicializamos
+btnGuardarTarj.addEventListener('click', () => {
+  const entidad = inputEntidad.value.trim();
+  const alias   = inputAlias.value.trim();
+  const cierre  = parseInt(inputCierre.value);
+
+  // Mensaje de confirmación
+  const msg = `¿Deseás guardar la tarjeta "${alias}" de ${entidad} con cierre el día ${cierre}?`;
+  if (!confirm(msg)) {
+    toggleBtnGuardarTarj(); // Revalidar si canceló
+    return;
+  }
+
+  // Crear tarjeta y guardar
+  const nuevaTarjeta = {
+    id: Date.now(),
+    entidad,
+    alias,
+    diaCierre: cierre
+  };
+
+  // Guardar en localStorage
+  const tarjetas = JSON.parse(localStorage.getItem('tarjetas')) || [];
+  tarjetas.push(nuevaTarjeta);
+  localStorage.setItem('tarjetas', JSON.stringify(tarjetas));
+
+  // Limpiar campos
+  inputEntidad.value = '';
+  inputAlias.value = '';
+  inputCierre.value = '';
+
+  // Revalidar botón
   toggleBtnGuardarTarj();
+
+  alert('Tarjeta guardada correctamente.');
+
+  // Si tenés una función para renderizar la lista, llamala acá:
+  // renderTarjetas(); 
+});
+
   
   // Datos
   let tarjetas = JSON.parse(localStorage.getItem('tarjetas')) || [];
