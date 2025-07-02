@@ -33,6 +33,11 @@ document.addEventListener('DOMContentLoaded', () => {
   inputEntidad.addEventListener('input', toggleBtnGuardarTarj);
   inputAlias.addEventListener('input', toggleBtnGuardarTarj);
   inputCierre.addEventListener('input', toggleBtnGuardarTarj);
+  selectTarjG.addEventListener('change', toggleBtnGuardarGastoTarjeta);
+  inputFecha.addEventListener('input', toggleBtnGuardarGastoTarjeta);
+  inputDet.addEventListener('input', toggleBtnGuardarGastoTarjeta);
+  inputMonto.addEventListener('input', toggleBtnGuardarGastoTarjeta);
+  inputCuo.addEventListener('input', toggleBtnGuardarGastoTarjeta);
 
   // 4. Renderizar tarjetas en la lista
   function renderTarjetas() {
