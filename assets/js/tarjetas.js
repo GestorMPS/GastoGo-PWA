@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   // Referencias al DOM
+  let tarjetas = JSON.parse(localStorage.getItem('tarjetas')) || [];
+  let gastos    = JSON.parse(localStorage.getItem('gastos'))    || [];
   const inputEntidad   = document.getElementById('input-entidad-tarjeta');
   const inputAlias     = document.getElementById('input-alias-tarjeta');
   const inputCierre    = document.getElementById('input-dia-cierre');
@@ -53,10 +55,6 @@ btnGuardarTarj.addEventListener('click', () => {
   // renderTarjetas();
 });
 
-  
-  // Datos
-  let tarjetas = JSON.parse(localStorage.getItem('tarjetas')) || [];
-  let gastos    = JSON.parse(localStorage.getItem('gastos'))    || [];
 
   // Helper moneda
   function formatearMoneda(v) {
