@@ -9,6 +9,26 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnGuardarTarj  = document.getElementById('btn-guardar-tarjeta');
   const ulTarjetas      = document.getElementById('ul-tarjetas');
 
+  const btnGuardarGasto = document.getElementById('btn-guardar-gasto-tarjeta');
+  function toggleBtnGuardarGastoTarjeta() {
+  const tarjetaId = selectTarjG.value;
+  const fecha = inputFecha.value;
+  const detalle = inputDet.value.trim();
+  const monto = parseFloat(inputMonto.value);
+  const cuotas = parseInt(inputCuo.value);
+
+  const habilitar =
+    tarjetaId && fecha && detalle && monto > 0 && cuotas > 0;
+
+  btnGuardarGasto.disabled = !habilitar;
+}
+selectTarjG.addEventListener('change', toggleBtnGuardarGastoTarjeta);
+inputFecha.addEventListener('input', toggleBtnGuardarGastoTarjeta);
+inputDet.addEventListener('input', toggleBtnGuardarGastoTarjeta);
+inputMonto.addEventListener('input', toggleBtnGuardarGastoTarjeta);
+inputCuo.addEventListener('input', toggleBtnGuardarGastoTarjeta);
+
+
   // 3. Validar inputs para habilitar botón
   function toggleBtnGuardarTarj() {
     const entidad = inputEntidad.value.trim();
