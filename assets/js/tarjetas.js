@@ -31,9 +31,26 @@ document.addEventListener('DOMContentLoaded', () => {
         <button class="btn-eliminar-tarjeta" data-id="${t.id}">Eliminar</button>
       `;
       ulTarjetas.appendChild(li);
+      renderComboTarjetas(); // <-- para que el combo se actualice también
+
     });
   }
 
+// Renderizar opciones del combo select-tarjeta-gasto
+  function renderComboTarjetas() {
+    const select = document.getElementById('select-tarjeta-gasto');
+    if (!select) return; // En caso de que aún no esté disponible en el DOM
+
+  select.innerHTML = '<option value="">-- Seleccionar tarjeta --</option>';
+  tarjetas.forEach(t => {
+    const opt = document.createElement('option');
+    opt.value = t.id;
+    opt.textContent = `${t.alias} (${t.entidad})`;
+    select.appendChild(opt);
+  });
+}
+
+  
   // 5. Guardar tarjeta con confirmación
   btnGuardarTarj.addEventListener('click', () => {
     const entidad = inputEntidad.value.trim();
