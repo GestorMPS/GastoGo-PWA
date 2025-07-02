@@ -27,6 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
   inputNumero.addEventListener('input', toggleBtnGuardarTarj);
   inputCierre.addEventListener('input', toggleBtnGuardarTarj);
 
+  toggleBtnGuardarTarj();
+  
   // Datos
   let tarjetas = JSON.parse(localStorage.getItem('tarjetas')) || [];
   let gastos    = JSON.parse(localStorage.getItem('gastos'))    || [];
