@@ -17,6 +17,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const labelTotalCiclo  = document.getElementById('label-total-ciclo');
   const labelTotalProx   = document.getElementById('label-total-prox-ciclo');
 
+  function toggleBtnGuardarTarj() {
+  const alias = inputAlias.value.trim();
+  const numero = inputNumero.value.trim();
+  const cierre = parseInt(inputCierre.value);
+  btnGuardarTarj.disabled = !alias || !numero || isNaN(cierre) || cierre < 1 || cierre > 31;
+}
+  
+  inputAlias.addEventListener('input', toggleBtnGuardarTarj);
+  inputNumero.addEventListener('input', toggleBtnGuardarTarj);
+  inputCierre.addEventListener('input', toggleBtnGuardarTarj);
+
   // Datos
   let tarjetas = JSON.parse(localStorage.getItem('tarjetas')) || [];
   let gastos    = JSON.parse(localStorage.getItem('gastos'))    || [];
