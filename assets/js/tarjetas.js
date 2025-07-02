@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Referencias al DOM
   const inputEntidad     = document.getElementById('input-entidad-tarjeta');
   const inputAlias       = document.getElementById('input-alias-tarjeta');
+  const inputNumero = document.getElementById('input-numero-tarjeta');
   const inputCierre      = document.getElementById('input-dia-cierre');
   const btnGuardarTarj   = document.getElementById('btn-guardar-tarjeta');
   const ulTarjetas       = document.getElementById('ul-tarjetas');
