@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const btnFinalizarMes      = document.getElementById('btn-finalizar-mes');
   const tabBotonGastos       = document.querySelector('[data-tab="gastos"]');
 
-  // Datos de subcategorías por categoría
   const subcategoriasPorCategoria = {
     Alimentos: ['Supermercado', 'Restaurante', 'Café'],
     Transporte: ['Taxi', 'Subte/Colectivo', 'Combustible'],
@@ -17,11 +16,9 @@ document.addEventListener('DOMContentLoaded', function () {
     Entretenimiento: ['Cine', 'Streaming', 'Salidas']
   };
 
-  // 2. Estado en memoria
   let gastos = [];
   let nextGastoId = 0;
 
-  // 3. Helper para formatear moneda según ajustes
   function formatearMoneda(valor) {
     const m = localStorage.getItem('moneda') || 'ARS';
     let symbol, locale;
@@ -33,14 +30,12 @@ document.addEventListener('DOMContentLoaded', function () {
     return symbol + Number(valor).toLocaleString(locale, { minimumFractionDigits: 2 });
   }
 
-  // 4. Recargar saldo desde localStorage restando los gastos en memoria
   function recargarSaldoDesdeLocalStorage() {
     const totalIngresos = parseFloat(localStorage.getItem('totalIngresosActual')) || 0;
     const totalGastosMemoria = gastos.reduce((acum, g) => acum + g.monto, 0);
     const saldo = totalIngresos - totalGastosMemoria;
     displaySaldoRestante.textContent = formatearMoneda(saldo);
 
-    // Bloquear inputs si no hay ingreso principal
     const bloquear = totalIngresos <= 0;
     selectCategoria.disabled    = bloquear;
     selectSubcategoria.disabled = bloquear;
@@ -49,7 +44,6 @@ document.addEventListener('DOMContentLoaded', function () {
     btnFinalizarMes.disabled    = bloquear || gastos.length === 0;
   }
 
-  // 5. Re-renderizar gastos en la tabla
   function renderGastos() {
     tablaGastosBody.innerHTML = '';
     gastos.forEach(g => {
@@ -65,20 +59,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // 6. Actualizar al cambiar moneda
   document.addEventListener('currencyChanged', () => {
     recargarSaldoDesdeLocalStorage();
     renderGastos();
   });
 
-  // 7. Recargar saldo al entrar a la pestaña Gastos
   tabBotonGastos.addEventListener('click', recargarSaldoDesdeLocalStorage);
 
-  // 8. Inicializar
   recargarSaldoDesdeLocalStorage();
   renderGastos();
 
-  // 9. Cargar subcategorías y habilitar botón
   function toggleBtnGuardarGasto() {
     const categoriaVal = selectCategoria.value;
     const subcatVal    = selectSubcategoria.value;
@@ -86,6 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const ingresosGuard = parseFloat(localStorage.getItem('totalIngresosActual')) || 0;
     btnGuardarGasto.disabled = !categoriaVal || !subcatVal || isNaN(montoVal) || montoVal <= 0 || ingresosGuard <= 0;
   }
+
   selectCategoria.addEventListener('change', function () {
     const cat = this.value;
     const opciones = subcategoriasPorCategoria[cat] || [];
@@ -95,10 +86,10 @@ document.addEventListener('DOMContentLoaded', function () {
     selectSubcategoria.disabled = opciones.length === 0;
     toggleBtnGuardarGasto();
   });
+
   selectSubcategoria.addEventListener('change', toggleBtnGuardarGasto);
   inputMontoGasto.addEventListener('input', toggleBtnGuardarGasto);
 
-  // 10. Guardar Gasto con confirmación
   btnGuardarGasto.addEventListener('click', () => {
     const categoria = selectCategoria.value;
     const subcat    = selectSubcategoria.value;
@@ -114,7 +105,6 @@ document.addEventListener('DOMContentLoaded', function () {
     recargarSaldoDesdeLocalStorage();
   });
 
-  // 11. Eliminar Gasto con confirmación
   tablaGastosBody.addEventListener('click', function (e) {
     if (!e.target.classList.contains('btn-eliminar-gasto')) return;
     const tr = e.target.closest('tr');
@@ -130,7 +120,6 @@ document.addEventListener('DOMContentLoaded', function () {
     recargarSaldoDesdeLocalStorage();
   });
 
-  // 12. Finalizar Mes con confirmación
   btnFinalizarMes.addEventListener('click', function () {
     const totalIngresos = parseFloat(localStorage.getItem('totalIngresosActual')) || 0;
     const totalGastos   = gastos.reduce((sum, g) => sum + g.monto, 0);
@@ -147,7 +136,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const detalleMes = { mes: nombreMes, totalIngresos, totalGastos, saldoFinal };
     document.dispatchEvent(new CustomEvent('nuevoMesFinalizado', { detail: detalleMes }));
 
-    // Reset de Gastos
     localStorage.removeItem('totalIngresosActual');
     gastos = [];
     renderGastos();
