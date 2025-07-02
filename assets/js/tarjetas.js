@@ -55,6 +55,38 @@ document.addEventListener('DOMContentLoaded', () => {
   btnGuardarGasto.disabled = !habilitar;
 }
 
+  // 4. Renderizar tarjetas en la lista
+  function renderTarjetas() {
+    ulTarjetas.innerHTML = '';
+    tarjetas.forEach((t) => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <strong>${t.alias}</strong> - ${t.entidad} (cierra día ${t.diaCierre})
+        <button class="btn-eliminar-tarjeta" data-id="${t.id}">Eliminar</button>
+      `;
+      ulTarjetas.appendChild(li);
+      renderComboTarjetas(); // <-- para que el combo se actualice también
+
+    });
+  }
+
+// Renderizar opciones del combo select-tarjeta-gasto
+  function renderComboTarjetas() {
+    const select = document.getElementById('select-tarjeta-gasto');
+    if (!select) return; // En caso de que aún no esté disponible en el DOM
+    
+    function toggleBtnGuardarGastoTarjeta() {
+    const tarjetaId = selectTarjG.value;
+    const fecha = inputFecha.value.trim();
+    const detalle = inputDet.value.trim();
+    const monto = parseFloat(inputMonto.value);
+    const cuotas = parseInt(inputCuo.value);
+
+    btnGuardarGasto.disabled = (
+     !tarjetaId || !fecha || !detalle || isNaN(monto) || monto <= 0 || isNaN(cuotas) || cuotas <= 0
+  );
+}
+
   function renderizarGastosTarjeta() {
   const tbody = document.querySelector('#tabla-gastos-tarjeta tbody');
   tbody.innerHTML = '';
@@ -93,39 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
   inputMonto.addEventListener('input', toggleBtnGuardarGastoTarjeta);
   inputCuo.addEventListener('input', toggleBtnGuardarGastoTarjeta);
 
-  // 4. Renderizar tarjetas en la lista
-  function renderTarjetas() {
-    ulTarjetas.innerHTML = '';
-    tarjetas.forEach((t) => {
-      const li = document.createElement('li');
-      li.innerHTML = `
-        <strong>${t.alias}</strong> - ${t.entidad} (cierra día ${t.diaCierre})
-        <button class="btn-eliminar-tarjeta" data-id="${t.id}">Eliminar</button>
-      `;
-      ulTarjetas.appendChild(li);
-      renderComboTarjetas(); // <-- para que el combo se actualice también
-
-    });
-  }
-
-// Renderizar opciones del combo select-tarjeta-gasto
-  function renderComboTarjetas() {
-    const select = document.getElementById('select-tarjeta-gasto');
-    if (!select) return; // En caso de que aún no esté disponible en el DOM
-    
-    function toggleBtnGuardarGastoTarjeta() {
-    const tarjetaId = selectTarjG.value;
-    const fecha = inputFecha.value.trim();
-    const detalle = inputDet.value.trim();
-    const monto = parseFloat(inputMonto.value);
-    const cuotas = parseInt(inputCuo.value);
-
-    btnGuardarGasto.disabled = (
-     !tarjetaId || !fecha || !detalle || isNaN(monto) || monto <= 0 || isNaN(cuotas) || cuotas <= 0
-  );
-}
-
-
+  
   select.innerHTML = '<option value="">-- Seleccionar tarjeta --</option>';
   tarjetas.forEach(t => {
     const opt = document.createElement('option');
