@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Referencias al DOM
   const inputEntidad     = document.getElementById('input-entidad-tarjeta');
   const inputAlias       = document.getElementById('input-alias-tarjeta');
-  const inputNumero = document.getElementById('input-numero-tarjeta');
   const inputCierre      = document.getElementById('input-dia-cierre');
   const btnGuardarTarj   = document.getElementById('btn-guardar-tarjeta');
   const ulTarjetas       = document.getElementById('ul-tarjetas');
@@ -20,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function toggleBtnGuardarTarj() {
   const alias = inputAlias.value.trim();
-  const numero = inputNumero.value.trim();
   const cierre = parseInt(inputCierre.value);
   btnGuardarTarj.disabled = !alias || !numero || isNaN(cierre) || cierre < 1 || cierre > 31;
 }
