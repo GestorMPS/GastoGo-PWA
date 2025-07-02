@@ -21,6 +21,13 @@ document.addEventListener('DOMContentLoaded', () => {
   inputAlias.addEventListener('input', toggleBtnGuardarTarj);
   inputCierre.addEventListener('input', toggleBtnGuardarTarj);
 
+  selectTarjG.addEventListener('change', toggleBtnGuardarGastoTarjeta);
+  inputFecha.addEventListener('input', toggleBtnGuardarGastoTarjeta);
+  inputDet.addEventListener('input', toggleBtnGuardarGastoTarjeta);
+  inputMonto.addEventListener('input', toggleBtnGuardarGastoTarjeta);
+  inputCuo.addEventListener('input', toggleBtnGuardarGastoTarjeta);
+
+
   // 4. Renderizar tarjetas en la lista
   function renderTarjetas() {
     ulTarjetas.innerHTML = '';
@@ -40,6 +47,19 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderComboTarjetas() {
     const select = document.getElementById('select-tarjeta-gasto');
     if (!select) return; // En caso de que aún no esté disponible en el DOM
+    
+    function toggleBtnGuardarGastoTarjeta() {
+    const tarjetaId = selectTarjG.value;
+    const fecha = inputFecha.value.trim();
+    const detalle = inputDet.value.trim();
+    const monto = parseFloat(inputMonto.value);
+    const cuotas = parseInt(inputCuo.value);
+
+    btnGuardarGasto.disabled = (
+     !tarjetaId || !fecha || !detalle || isNaN(monto) || monto <= 0 || isNaN(cuotas) || cuotas <= 0
+  );
+}
+
 
   select.innerHTML = '<option value="">-- Seleccionar tarjeta --</option>';
   tarjetas.forEach(t => {
@@ -98,4 +118,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 7. Render inicial al cargar
   renderTarjetas();
+  toggleBtnGuardarGastoTarjeta();
+
 });
