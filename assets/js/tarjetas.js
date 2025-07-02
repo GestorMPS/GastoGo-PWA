@@ -1,32 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
   // Referencias al DOM
-  const inputEntidad     = document.getElementById('input-entidad-tarjeta');
-  const inputAlias       = document.getElementById('input-alias-tarjeta');
-  const inputCierre      = document.getElementById('input-dia-cierre');
-  const btnGuardarTarj   = document.getElementById('btn-guardar-tarjeta');
-  const ulTarjetas       = document.getElementById('ul-tarjetas');
+  const inputEntidad   = document.getElementById('input-entidad-tarjeta');
+  const inputAlias     = document.getElementById('input-alias-tarjeta');
+  const inputCierre    = document.getElementById('input-dia-cierre');
+  const btnGuardarTarj = document.getElementById('btn-guardar-tarjeta');
 
-  const selectTarjG      = document.getElementById('select-tarjeta-gasto');
-  const inputFecha       = document.getElementById('input-fecha-compra');
-  const inputMonto       = document.getElementById('input-monto-gasto-tarjeta');
-  const inputDet         = document.getElementById('input-detalle-gasto');
-  const inputCuo         = document.getElementById('input-cuotas-gasto');
-  const btnGuardarGasto  = document.getElementById('btn-guardar-gasto-tarjeta');
-  const tbodyGastos      = document.querySelector('#tabla-gastos-tarjeta tbody');
-
-  const labelTotalCiclo  = document.getElementById('label-total-ciclo');
-  const labelTotalProx   = document.getElementById('label-total-prox-ciclo');
-
+  // ✅ FUNCIÓN ACTUALIZADA: sin inputNumero
   function toggleBtnGuardarTarj() {
-  const alias = inputAlias.value.trim();
-  const cierre = parseInt(inputCierre.value);
-  btnGuardarTarj.disabled = !alias || !numero || isNaN(cierre) || cierre < 1 || cierre > 31;
-}
-  
+    const entidad = inputEntidad.value.trim();
+    const alias   = inputAlias.value.trim();
+    const cierre  = parseInt(inputCierre.value);
+    btnGuardarTarj.disabled = !entidad || !alias || isNaN(cierre) || cierre < 1 || cierre > 28;
+  }
+
+  // ✅ Escuchamos los cambios en los inputs relevantes
+  inputEntidad.addEventListener('input', toggleBtnGuardarTarj);
   inputAlias.addEventListener('input', toggleBtnGuardarTarj);
-  inputNumero.addEventListener('input', toggleBtnGuardarTarj);
   inputCierre.addEventListener('input', toggleBtnGuardarTarj);
 
+  // Inicializamos
   toggleBtnGuardarTarj();
   
   // Datos
