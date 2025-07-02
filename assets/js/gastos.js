@@ -95,6 +95,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const subcat    = selectSubcategoria.value;
     const monto     = parseFloat(inputMontoGasto.value);
 
+    if (isNaN(monto) || monto <= 0) {
+       alert("El monto debe ser mayor que 0.");
+       return;
+    }
+
     if (!confirm(`¿Registrar gasto de ${formatearMoneda(monto)} en ${categoria} → ${subcat}?`)) {
       return;
     }
