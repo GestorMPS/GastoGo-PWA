@@ -55,6 +55,35 @@ document.addEventListener('DOMContentLoaded', () => {
   btnGuardarGasto.disabled = !habilitar;
 }
 
+  function renderizarGastosTarjeta() {
+  const tbody = document.querySelector('#tabla-gastos-tarjeta tbody');
+  tbody.innerHTML = '';
+
+  const totalPorCiclo = { Actual: 0, Próximo: 0 };
+
+  gastos.forEach(g => {
+    const tarjeta = tarjetas.find(t => t.id === g.tarjetaId);
+    if (!tarjeta) return;
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${g.fechaCompra}</td>
+      <td>${g.detalle}</td>
+      <td>${tarjeta.alias}</td>
+      <td>${g.cuotasPendientes}</td>
+      <td>${formatearMoneda(g.montoCuota)}</td>
+      <td>${g.cicloAsignado}</td>
+    `;
+    tbody.appendChild(tr);
+
+    totalPorCiclo[g.cicloAsignado] += g.montoCuota;
+  });
+
+  document.getElementById('label-total-ciclo').textContent = formatearMoneda(totalPorCiclo['Actual']);
+  document.getElementById('label-total-prox-ciclo').textContent = formatearMoneda(totalPorCiclo['Próximo']);
+}
+
+  
   inputEntidad.addEventListener('input', toggleBtnGuardarTarj);
   inputAlias.addEventListener('input', toggleBtnGuardarTarj);
   inputCierre.addEventListener('input', toggleBtnGuardarTarj);
