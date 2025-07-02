@@ -30,11 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
   btnGuardarGasto.disabled = !habilitar;
 }
 
-  selectTarjG.addEventListener('change', toggleBtnGuardarGastoTarjeta);
-  inputFecha.addEventListener('input', toggleBtnGuardarGastoTarjeta);
-  inputDet.addEventListener('input', toggleBtnGuardarGastoTarjeta);
-  inputMonto.addEventListener('input', toggleBtnGuardarGastoTarjeta);
-  inputCuo.addEventListener('input', toggleBtnGuardarGastoTarjeta);
   inputEntidad.addEventListener('input', toggleBtnGuardarTarj);
   inputAlias.addEventListener('input', toggleBtnGuardarTarj);
   inputCierre.addEventListener('input', toggleBtnGuardarTarj);
@@ -114,6 +109,57 @@ document.addEventListener('DOMContentLoaded', () => {
     alert('Tarjeta guardada correctamente.');
   });
 
+btnGuardarGasto.addEventListener('click', () => {
+  const tarjetaId = +selectTarjG.value;
+  const fechaCompra = inputFecha.value;
+  const detalle = inputDet.value.trim();
+  const montoTotal = +inputMonto.value;
+  const cuotasPendientes = +inputCuo.value;
+
+  // Validaciones finales de seguridad
+  if (!tarjetaId || !fechaCompra || !detalle || montoTotal <= 0 || cuotasPendientes <= 0) return;
+
+  const tarjeta = tarjetas.find(t => t.id === tarjetaId);
+  const montoCuota = montoTotal / cuotasPendientes;
+
+  const confirmar = confirm(
+    `¿Registrar gasto de ${formatearMoneda(montoTotal)} en ${cuotasPendientes} cuotas ` +
+    `(${formatearMoneda(montoCuota)} cada una) en tarjeta "${tarjeta.alias}"?`
+  );
+  if (!confirmar) return;
+
+  const pv = calcularPrimerVencimiento(fechaCompra, tarjeta.diaCierre);
+  const { inicio, fin } = calcularCiclos(tarjeta.diaCierre);
+  const ciclo = (pv >= inicio && pv <= fin) ? 'Actual' : 'Próximo';
+
+  const gasto = {
+    id: Date.now(),
+    tarjetaId,
+    fechaCompra,
+    detalle,
+    cuotasPendientes,
+    montoCuota,
+    primerVencimiento: pv.toISOString(),
+    cicloAsignado: ciclo
+  };
+
+  gastos.push(gasto);
+  localStorage.setItem('gastos', JSON.stringify(gastos));
+
+  // Refrescar tabla o vista
+  renderizarGastosTarjeta();
+  toggleBtnGuardarGastoTarjeta();
+
+  // Limpiar formulario
+  selectTarjG.value = '';
+  inputFecha.value = '';
+  inputDet.value = '';
+  inputMonto.value = '';
+  inputCuo.value = '';
+  btnGuardarGasto.disabled = true;
+});
+
+  
   // 6. Eliminar tarjeta con confirmación
   ulTarjetas.addEventListener('click', (e) => {
     if (e.target.classList.contains('btn-eliminar-tarjeta')) {
