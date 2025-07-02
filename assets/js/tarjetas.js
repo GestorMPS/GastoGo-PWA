@@ -15,6 +15,26 @@ document.addEventListener('DOMContentLoaded', () => {
   const inputCuo    = document.getElementById('input-cuotas-gasto');
   const btnGuardarGasto = document.getElementById('btn-guardar-gasto-tarjeta');
 
+  function formatearMoneda(valor) {
+  const m = localStorage.getItem('moneda') || 'ARS';
+  let symbol, locale;
+  switch (m) {
+    case 'USD':
+      symbol = 'US$';
+      locale = 'en-US';
+      break;
+    case 'EUR':
+      symbol = '€';
+      locale = 'de-DE';
+      break;
+    default:
+      symbol = '$';
+      locale = 'es-AR';
+  }
+  return symbol + Number(valor).toLocaleString(locale, { minimumFractionDigits: 2 });
+}
+
+
   // 3. Validar inputs para habilitar botón
   function toggleBtnGuardarTarj() {
     const entidad = inputEntidad.value.trim();
