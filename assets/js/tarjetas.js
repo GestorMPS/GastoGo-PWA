@@ -118,6 +118,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 7. Render inicial al cargar
   renderTarjetas();
-  toggleBtnGuardarGastoTarjeta();
 
 });
