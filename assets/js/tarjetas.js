@@ -162,7 +162,7 @@ btnGuardarTarj.addEventListener('click', () => {
     labelTotalProx.textContent   = `Total Próximo Ciclo: ${formatearMoneda(totalP)}`;
   }
 
-  // Confirmar + Guardar nueva tarjeta
+  /* Confirmar + Guardar nueva tarjeta
   btnGuardarTarj.addEventListener('click', () => {
     const ent   = inputEntidad.value.trim();
     const alias = inputAlias.value.trim();
@@ -173,7 +173,7 @@ btnGuardarTarj.addEventListener('click', () => {
     inputAlias.value   = '';
     inputCierre.value  = '';
     renderTarjetas();
-  });
+  }); */
 
   // Escuchar acciones en la lista de tarjetas
   ulTarjetas.addEventListener('click', e => {
