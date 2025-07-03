@@ -44,10 +44,13 @@ document.addEventListener('DOMContentLoaded', () => {
     ulTarjetas.innerHTML = '';
     tarjetas.forEach(t => {
       const li = document.createElement('li');
-      li.textContent = `${t.entidad} - ${t.alias} (cierra día ${t.diaCierre})`;
+      li.innerHTML = `
+        <strong>${t.entidad}</strong> – ${t.alias} (Cierra día ${t.diaCierre})
+        <button data-id="${t.id}" class="btn-eliminar-tarjeta">🗑️</button>
+      `;
       ulTarjetas.appendChild(li);
     });
-  }
+   }
 
   function renderComboTarjetas() {
     selectTarjG.innerHTML = '<option value="">-- Seleccionar --</option>';
@@ -112,6 +115,19 @@ document.addEventListener('DOMContentLoaded', () => {
     inputCierre.value = '';
     toggleBtnGuardarTarj();
   });
+  
+  ulTarjetas.addEventListener('click', (e) => {
+    if (e.target.classList.contains('btn-eliminar-tarjeta')) {
+      const id = Number(e.target.dataset.id);
+      const tarjeta = tarjetas.find(t => t.id === id);
+      const confirmar = confirm(`¿Eliminar la tarjeta "${tarjeta.alias}"?`);
+      if (!confirmar) return;
+      tarjetas = tarjetas.filter(t => t.id !== id);
+      localStorage.setItem('tarjetas', JSON.stringify(tarjetas));
+      renderTarjetas();
+      renderComboTarjetas();
+     }
+   });
 
   btnGuardarGasto.addEventListener('click', () => {
     const tarjetaId = +selectTarjG.value;
