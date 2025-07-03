@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const inputMonto  = document.getElementById('input-monto-gasto-tarjeta');
   const inputCuo    = document.getElementById('input-cuotas-gasto');
   const btnGuardarGasto = document.getElementById('btn-guardar-gasto-tarjeta');
+  const tbodyGastos = document.querySelector('#tabla-gastos-tarjeta tbody');
+  const labelTotalCiclo = document.getElementById('label-total-ciclo');
+  const labelTotalProx = document.getElementById('label-total-prox-ciclo');
 
   function formatearMoneda(valor) {
   const m = localStorage.getItem('moneda') || 'ARS';
