@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   // 1. Cargar tarjetas desde localStorage al inicio
   let tarjetas = JSON.parse(localStorage.getItem('tarjetas')) || [];
+  let gastos = JSON.parse(localStorage.getItem('gastos')) || [];
 
   // 2. Referencias al DOM
   const inputEntidad    = document.getElementById('input-entidad-tarjeta');
