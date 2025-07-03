@@ -252,18 +252,17 @@
     </div>
     <div class="form-group">
       <label for="input-cuotas-gasto">Cuotas:</label>
-      <input
-        type="number"
-        id="input-cuotas-gasto"
-        min="1"
-        max="18"
-        value="1"
-     />
+      <input type="number" id="input-cuotas-gasto" min="1" max="18" value="1" />
 
     </div>
+    
     <button type="button" id="btn-guardar-gasto-tarjeta" class="btn" disabled>
       Guardar Gasto
     </button>
+  </div>
+  <div class="totales-gastos">
+    <p>Total del ciclo actual: <span id="label-total-ciclo">$0.00</span></p>
+    <p>Total del próximo ciclo: <span id="label-total-prox-ciclo">$0.00</span></p>
   </div>
 
   <!-- 4.5.4. Tabla de gastos por cuotas -->
