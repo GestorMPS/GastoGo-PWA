@@ -91,10 +91,10 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 
   function renderizarGastosTarjeta() {
-  const tbody = document.querySelector('#tabla-gastos-tarjeta tbody');
-  tbody.innerHTML = '';
+  if (!tbodyGastos || !labelTotalCiclo || !labelTotalProx) return;
 
-  const totalPorCiclo = { Actual: 0, Próximo: 0 };
+  tbodyGastos.innerHTML = '';
+  const total = { Actual: 0, Próximo: 0 };
 
   gastos.forEach(g => {
     const tarjeta = tarjetas.find(t => t.id === g.tarjetaId);
@@ -109,16 +109,15 @@ document.addEventListener('DOMContentLoaded', () => {
       <td>${formatearMoneda(g.montoCuota)}</td>
       <td>${g.cicloAsignado}</td>
     `;
-    tbody.appendChild(tr);
+    tbodyGastos.appendChild(tr);
 
-    totalPorCiclo[g.cicloAsignado] += g.montoCuota;
+    total[g.cicloAsignado] += g.montoCuota;
   });
 
-  document.getElementById('label-total-ciclo').textContent = formatearMoneda(totalPorCiclo['Actual']);
-  document.getElementById('label-total-prox-ciclo').textContent = formatearMoneda(totalPorCiclo['Próximo']);
+  labelTotalCiclo.textContent = formatearMoneda(total.Actual);
+  labelTotalProx.textContent = formatearMoneda(total.Próximo);
 }
 
-  
   inputEntidad.addEventListener('input', toggleBtnGuardarTarj);
   inputAlias.addEventListener('input', toggleBtnGuardarTarj);
   inputCierre.addEventListener('input', toggleBtnGuardarTarj);
