@@ -113,9 +113,8 @@ tbodyGastos.addEventListener('click', e => {
     gastos = gastos.filter(g => g.id !== id);
     localStorage.setItem('gastos', JSON.stringify(gastos));
     renderizarGastosTarjeta();
-    }
-   });
   }
+});
 
   // 6. Habilitar/Deshabilitar botones
   function toggleBtnGuardarTarj() {
