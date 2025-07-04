@@ -87,21 +87,21 @@ document.addEventListener('DOMContentLoaded', () => {
         <td>${formatearMoneda(g.montoCuota)}</td>
         <td>${g.cicloAsignado}</td>
       `;
-      tbodyGastos.appendChild(tr);
+      
+      tbodyGastos.addEventListener('click', e => {
+      if (e.target.classList.contains('btn-eliminar-gasto-tarjeta')) {
+      const id = +e.target.closest('tr').dataset.id;
+      gastos = gastos.filter(g => g.id !== id);
+      localStorage.setItem('gastos', JSON.stringify(gastos));
+      renderizarGastosTarjeta();
+       }
+     });
+    tbodyGastos.appendChild(tr);
 
     labelTotalCiclo.textContent = formatearMoneda(total.Actual);
     labelTotalProx.textContent = formatearMoneda(total.Próximo);
     total[g.cicloAsignado] += g.montoCuota;
     });
-
-    tbodyGastos.addEventListener('click', e => {
-  if (e.target.classList.contains('btn-eliminar-gasto-tarjeta')) {
-    const id = +e.target.closest('tr').dataset.id;
-    gastos = gastos.filter(g => g.id !== id);
-    localStorage.setItem('gastos', JSON.stringify(gastos));
-    renderizarGastosTarjeta();
-     }
-   });
   }
 
   // 6. Habilitar/Deshabilitar botones
