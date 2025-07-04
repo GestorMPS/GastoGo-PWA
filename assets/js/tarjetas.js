@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const { inicio, fin } = calcularCiclos(tarjeta.diaCierre);
     const ciclo = (pv >= inicio && pv <= fin) ? 'Actual' : 'Próximo';
 
-    gastos.push({
+    const gasto = {
       id: Date.now(),
       tarjetaId,
       fechaCompra,
@@ -169,8 +169,11 @@ document.addEventListener('DOMContentLoaded', () => {
       montoCuota,
       primerVencimiento: pv.toISOString(),
       cicloAsignado: ciclo
-    });
+    };
 
+    console.log('Gasto registrado:', gasto);
+    
+    gastos.push(gasto);
     localStorage.setItem('gastos', JSON.stringify(gastos));
     renderizarGastosTarjeta();
 
