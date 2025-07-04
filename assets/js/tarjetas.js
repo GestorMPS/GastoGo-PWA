@@ -75,7 +75,7 @@ function renderizarGastosTarjeta() {
 
   tbodyGastos.innerHTML = '';
   const total = { Actual: 0, Próximo: 0 };
-
+  
   gastos.forEach(g => {
     const tarjeta = tarjetas.find(t => t.id === g.tarjetaId);
     if (!tarjeta) return;
@@ -85,7 +85,6 @@ function renderizarGastosTarjeta() {
     tr.innerHTML = `
       <td>${g.fechaCompra}</td>
       <td>${g.detalle}</td>
-      <td>${tarjeta.alias}</td>
       <td>${g.cuotasPendientes}</td>
       <td>${formatearMoneda(g.montoCuota)}</td>
       <td>${new Date(g.primerVencimiento).toLocaleDateString('es-AR')}</td>
@@ -93,7 +92,8 @@ function renderizarGastosTarjeta() {
       <td><button class="btn-eliminar-gasto-tarjeta">Eliminar</button></td>
     `;
     tbodyGastos.appendChild(tr);
-
+    
+    console.log('ciclo:', g.cicloAsignado, 'monto:', g.montoCuota);
     total[g.cicloAsignado] += g.montoCuota;
   });
 
