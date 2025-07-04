@@ -90,9 +90,10 @@ document.addEventListener('DOMContentLoaded', () => {
       tbodyGastos.appendChild(tr);
 
       total[g.cicloAsignado] += g.montoCuota;
-    });
     labelTotalCiclo.textContent = formatearMoneda(total.Actual);
     labelTotalProx.textContent = formatearMoneda(total.Próximo);
+    });
+
   }
 
   // 6. Habilitar/Deshabilitar botones
