@@ -89,11 +89,19 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
       tbodyGastos.appendChild(tr);
 
-      total[g.cicloAsignado] += g.montoCuota;
     labelTotalCiclo.textContent = formatearMoneda(total.Actual);
     labelTotalProx.textContent = formatearMoneda(total.Próximo);
+    total[g.cicloAsignado] += g.montoCuota;
     });
 
+    tbodyGastos.addEventListener('click', e => {
+  if (e.target.classList.contains('btn-eliminar-gasto-tarjeta')) {
+    const id = +e.target.closest('tr').dataset.id;
+    gastos = gastos.filter(g => g.id !== id);
+    localStorage.setItem('gastos', JSON.stringify(gastos));
+    renderizarGastosTarjeta();
+     }
+   });
   }
 
   // 6. Habilitar/Deshabilitar botones
