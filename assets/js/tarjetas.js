@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const inputDet = document.getElementById('input-detalle-gasto');
   const inputCuo = document.getElementById('input-cuotas-gasto');
   const btnGuardarGasto = document.getElementById('btn-guardar-gasto-tarjeta');
+  
   const tbodyGastos = document.querySelector('#tabla-gastos-tarjeta tbody');
-
   const labelTotalCiclo = document.getElementById('label-total-ciclo');
   const labelTotalProx = document.getElementById('label-total-prox-ciclo');
 
@@ -70,38 +70,51 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // 5. Renderizar Gastos
-  function renderizarGastosTarjeta() {
-    tbodyGastos.innerHTML = '';
-    const total = { Actual: 0, Próximo: 0 };
+function renderizarGastosTarjeta() {
+  if (!tbodyGastos || !labelTotalCiclo || !labelTotalProx) return;
 
-    gastos.forEach(g => {
-      const tarjeta = tarjetas.find(t => t.id === g.tarjetaId);
-      if (!tarjeta) return;
+  tbodyGastos.innerHTML = '';
+  const total = { Actual: 0, Próximo: 0 };
 
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${g.fechaCompra}</td>
-        <td>${g.detalle}</td>
-        <td>${tarjeta.alias}</td>
-        <td>${g.cuotasPendientes}</td>
-        <td>${formatearMoneda(g.montoCuota)}</td>
-        <td>${g.cicloAsignado}</td>
-      `;
-      
-      tbodyGastos.addEventListener('click', e => {
-      if (e.target.classList.contains('btn-eliminar-gasto-tarjeta')) {
-      const id = +e.target.closest('tr').dataset.id;
-      gastos = gastos.filter(g => g.id !== id);
-      localStorage.setItem('gastos', JSON.stringify(gastos));
-      renderizarGastosTarjeta();
-       }
-     });
+  gastos.forEach(g => {
+    const tarjeta = tarjetas.find(t => t.id === g.tarjetaId);
+    if (!tarjeta) return;
+
+    const tr = document.createElement('tr');
+    tr.dataset.id = g.id;
+    tr.innerHTML = `
+      <td>${g.fechaCompra}</td>
+      <td>${g.detalle}</td>
+      <td>${tarjeta.alias}</td>
+      <td>${g.cuotasPendientes}</td>
+      <td>${formatearMoneda(g.montoCuota)}</td>
+      <td>${new Date(g.primerVencimiento).toLocaleDateString('es-AR')}</td>
+      <td>${g.cicloAsignado}</td>
+      <td><button class="btn-eliminar-gasto-tarjeta">Eliminar</button></td>
+    `;
     tbodyGastos.appendChild(tr);
 
-    labelTotalCiclo.textContent = formatearMoneda(total.Actual);
-    labelTotalProx.textContent = formatearMoneda(total.Próximo);
     total[g.cicloAsignado] += g.montoCuota;
-    });
+  });
+
+  labelTotalCiclo.textContent = formatearMoneda(total.Actual);
+  labelTotalProx.textContent = formatearMoneda(total.Próximo);
+}
+
+// Listener para eliminar un gasto al hacer clic en el botón
+tbodyGastos.addEventListener('click', e => {
+  if (e.target.classList.contains('btn-eliminar-gasto-tarjeta')) {
+    const fila = e.target.closest('tr');
+    const id = +fila.dataset.id;
+    const gasto = gastos.find(g => g.id === id);
+
+    if (!confirm(`¿Eliminar gasto "${gasto.detalle}" de ${formatearMoneda(gasto.montoCuota)}?`)) return;
+
+    gastos = gastos.filter(g => g.id !== id);
+    localStorage.setItem('gastos', JSON.stringify(gastos));
+    renderizarGastosTarjeta();
+    }
+   });
   }
 
   // 6. Habilitar/Deshabilitar botones
