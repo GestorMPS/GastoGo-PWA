@@ -73,14 +73,29 @@ function renderizarGastosTarjeta() {
   if (!tbodyGastos || !labelTotalCiclo || !labelTotalProx) return;
 
   tbodyGastos.innerHTML = '';
-  let totalActual = 0;
-  let totalProximo = 0;
+  let totalCicloActual = 0;
+  let totalCicloProximo = 0;
+
+  const hoy = new Date();
+
+  // Función auxiliar: calcula el inicio y fin de un ciclo, dado un día de cierre
+  function calcularCiclo(diaCierre, referencia) {
+    let cierre = new Date(referencia.getFullYear(), referencia.getMonth(), diaCierre);
+    if (referencia.getDate() > diaCierre) cierre.setMonth(cierre.getMonth() + 1);
+    const inicio = new Date(cierre);
+    inicio.setMonth(inicio.getMonth() - 1);
+    inicio.setDate(diaCierre + 1);
+    return { inicio, fin: cierre };
+  }
+
+  // Calcular inicio y fin del ciclo actual y próximo
+  const ciclos = [0, 1].map(offset => calcularCiclo(25, new Date(hoy.getFullYear(), hoy.getMonth() + offset, hoy.getDate())));
 
   gastos.forEach(g => {
     const tarjeta = tarjetas.find(t => t.id === g.tarjetaId);
     if (!tarjeta) return;
 
-    // Render fila principal
+    // Renderizar la fila como siempre
     const tr = document.createElement('tr');
     tr.dataset.id = g.id;
     tr.innerHTML = `
@@ -94,27 +109,22 @@ function renderizarGastosTarjeta() {
     `;
     tbodyGastos.appendChild(tr);
 
-    // Analizar cada cuota
-    let vencimiento = new Date(g.primerVencimiento);
-
+    // Calcular vencimientos por cuota
     for (let i = 0; i < g.cuotasPendientes; i++) {
-      const ciclo = calcularCiclos(tarjeta.diaCierre, new Date()); // Hoy
+      const vencimiento = new Date(g.primerVencimiento);
+      vencimiento.setMonth(vencimiento.getMonth() + i);
 
-      if (vencimiento >= ciclo.inicio && vencimiento <= ciclo.fin) {
-        totalActual += g.montoCuota;
-        console.log(`✔ Cuota ${i + 1} al ciclo ACTUAL. Vence: ${vencimiento.toLocaleDateString('es-AR')}`);
-      } else {
-        totalProximo += g.montoCuota;
-        console.log(`➡ Cuota ${i + 1} al ciclo PRÓXIMO. Vence: ${vencimiento.toLocaleDateString('es-AR')}`);
+      if (vencimiento >= ciclos[0].inicio && vencimiento <= ciclos[0].fin) {
+        totalCicloActual += g.montoCuota;
+      } else if (vencimiento >= ciclos[1].inicio && vencimiento <= ciclos[1].fin) {
+        totalCicloProximo += g.montoCuota;
       }
-
-      // Pasar al mes siguiente para la siguiente cuota
-      vencimiento.setMonth(vencimiento.getMonth() + 1);
+      // El resto de las cuotas (cuota 3 en adelante) no se acumulan aún
     }
   });
 
-  labelTotalCiclo.textContent = formatearMoneda(totalActual);
-  labelTotalProx.textContent = formatearMoneda(totalProximo);
+  labelTotalCiclo.textContent = formatearMoneda(totalCicloActual);
+  labelTotalProx.textContent = formatearMoneda(totalCicloProximo);
 }
 
    function actualizarResumenGeneral() {
