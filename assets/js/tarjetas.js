@@ -76,14 +76,11 @@ function renderizarGastosTarjeta() {
   let totalActual = 0;
   let totalProximo = 0;
 
-  const hoy = new Date();
-
   gastos.forEach(g => {
     const tarjeta = tarjetas.find(t => t.id === g.tarjetaId);
     if (!tarjeta) return;
-  const { inicio, fin } = calcularCiclos(tarjeta.diaCierre, hoy);
 
-    // Render fila única del gasto (como venía)
+    // Render fila principal
     const tr = document.createElement('tr');
     tr.dataset.id = g.id;
     tr.innerHTML = `
@@ -97,24 +94,22 @@ function renderizarGastosTarjeta() {
     `;
     tbodyGastos.appendChild(tr);
 
-    // Acumulamos cada cuota en su ciclo
-  let vencimiento = new Date(g.primerVencimiento);
+    // Analizar cada cuota
+    let vencimiento = new Date(g.primerVencimiento);
 
-for (let i = 0; i < g.cuotasPendientes; i++) {
-  const cicloActual = calcularCiclos(tarjeta.diaCierre, vencimiento);
-  const inicio = cicloActual.inicio;
-  const fin = cicloActual.fin;
+    for (let i = 0; i < g.cuotasPendientes; i++) {
+      const ciclo = calcularCiclos(tarjeta.diaCierre, new Date()); // Hoy
 
-  if (vencimiento >= inicio && vencimiento <= fin) {
-    totalActual += g.montoCuota;
-    console.log(`✔ Cuota ${i + 1} de "${g.detalle}" al ciclo ACTUAL. Vence: ${vencimiento.toLocaleDateString('es-AR')}`);
-  } else {
-    totalProximo += g.montoCuota;
-    console.log(`➡ Cuota ${i + 1} de "${g.detalle}" al ciclo PRÓXIMO. Vence: ${vencimiento.toLocaleDateString('es-AR')}`);
-  }
+      if (vencimiento >= ciclo.inicio && vencimiento <= ciclo.fin) {
+        totalActual += g.montoCuota;
+        console.log(`✔ Cuota ${i + 1} al ciclo ACTUAL. Vence: ${vencimiento.toLocaleDateString('es-AR')}`);
+      } else {
+        totalProximo += g.montoCuota;
+        console.log(`➡ Cuota ${i + 1} al ciclo PRÓXIMO. Vence: ${vencimiento.toLocaleDateString('es-AR')}`);
+      }
 
-  // Avanzamos al próximo mes para la siguiente cuota
-  vencimiento.setMonth(vencimiento.getMonth() + 1);
+      // Pasar al mes siguiente para la siguiente cuota
+      vencimiento.setMonth(vencimiento.getMonth() + 1);
     }
   });
 
