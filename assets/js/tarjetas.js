@@ -114,7 +114,6 @@ for (let i = 0; i < g.cuotasPendientes; i++) {
 
       // Próximo mes
       vencimiento.setMonth(vencimiento.getMonth() + 1);
-    }
   });
 
   labelTotalCiclo.textContent = formatearMoneda(totalActual);
