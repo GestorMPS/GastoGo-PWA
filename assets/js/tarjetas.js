@@ -81,6 +81,7 @@ function renderizarGastosTarjeta() {
   gastos.forEach(g => {
     const tarjeta = tarjetas.find(t => t.id === g.tarjetaId);
     if (!tarjeta) return;
+  const { inicio, fin } = calcularCiclos(tarjeta.diaCierre, hoy);
 
     // Render fila única del gasto (como venía)
     const tr = document.createElement('tr');
@@ -101,7 +102,6 @@ function renderizarGastosTarjeta() {
 
 for (let i = 0; i < g.cuotasPendientes; i++) {
   const vencimiento = new Date(g.primerVencimiento);
-  vencimiento.setMonth(vencimiento.getMonth() + i);
 
   if (vencimiento >= inicio && vencimiento <= fin) {
     totalActual += g.montoCuota;
