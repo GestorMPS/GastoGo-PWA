@@ -74,8 +74,11 @@ function renderizarGastosTarjeta() {
   if (!tbodyGastos || !labelTotalCiclo || !labelTotalProx) return;
 
   tbodyGastos.innerHTML = '';
-  const total = { Actual: 0, Próximo: 0 };
-  
+  let totalCicloActual = 0;
+  let totalCicloProximo = 0;
+
+  const hoy = new Date();
+
   gastos.forEach(g => {
     const tarjeta = tarjetas.find(t => t.id === g.tarjetaId);
     if (!tarjeta) return;
@@ -92,19 +95,25 @@ function renderizarGastosTarjeta() {
       <td><button class="btn-eliminar-gasto-tarjeta">Eliminar</button></td>
     `;
     tbodyGastos.appendChild(tr);
-    
-    //console.log('ciclo:', g.cicloAsignado, 'monto:', g.montoCuota);
 
-    if (g.cicloAsignado === 'Actual') {
-    total.Actual += g.montoCuota;
-  } else if (g.cicloAsignado === 'Próximo') {
-    total.Próximo += g.montoCuota;
-  }
-    //total[g.cicloAsignado] += g.montoCuota;
+    // Sumar las cuotas al ciclo actual y siguientes
+    for (let i = 0; i < g.cuotasPendientes; i++) {
+      const vencimiento = new Date(g.primerVencimiento);
+      vencimiento.setMonth(vencimiento.getMonth() + i);
+
+      const { inicio, fin } = calcularCiclos(tarjeta.diaCierre);
+      if (vencimiento >= inicio && vencimiento <= fin) {
+        totalCicloActual += g.montoCuota;
+      } else if (vencimiento > fin) {
+        totalCicloProximo += g.montoCuota;
+      }
+    }
   });
-  labelTotalCiclo.textContent = formatearMoneda(total.Actual);
-  labelTotalProx.textContent = formatearMoneda(total.Próximo);
+
+  labelTotalCiclo.textContent = formatearMoneda(totalCicloActual);
+  labelTotalProx.textContent = formatearMoneda(totalCicloProximo);
 }
+
    function actualizarResumenGeneral() {
    const totalC = gastos
     .filter(g => g.cicloAsignado === 'Actual')
