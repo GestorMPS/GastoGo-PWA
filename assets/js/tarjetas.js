@@ -94,7 +94,14 @@ function renderizarGastosTarjeta() {
     tbodyGastos.appendChild(tr);
     
     console.log('ciclo:', g.cicloAsignado, 'monto:', g.montoCuota);
-    total[g.cicloAsignado] += g.montoCuota;
+
+    if (g.cicloAsignado === 'Actual') {
+    total.Actual += g.montoCuota;
+  } else if (g.cicloAsignado === 'Próximo') {
+    total.Próximo += g.montoCuota;
+  }
+
+    //total[g.cicloAsignado] += g.montoCuota;
   });
 
   labelTotalCiclo.textContent = formatearMoneda(total.Actual);
