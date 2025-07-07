@@ -29,21 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (m === 'EUR') { symbol = '€'; locale = 'de-DE'; }
     return symbol + Number(valor).toLocaleString(locale, { minimumFractionDigits: 2 });
   }
-
-  function actualizarResumenGeneral() {
-   const totalC = gastos
-    .filter(g => g.cicloAsignado === 'Actual')
-    .reduce((sum, g) => sum + g.montoCuota, 0);
-
-   const totalP = gastos
-    .filter(g => g.cicloAsignado === 'Próximo')
-    .reduce((sum, g) => sum + g.montoCuota, 0);
-
-   labelTotalCiclo.textContent = formatearMoneda(totalC);
-   labelTotalProx.textContent  = formatearMoneda(totalP);
-}
-
-  
+ 
   function calcularPrimerVencimiento(fechaCompraISO, diaCierre) {
     const compra = new Date(fechaCompraISO);
     let mesVto = compra.getDate() <= diaCierre ? compra.getMonth() + 1 : compra.getMonth() + 2;
@@ -119,6 +105,18 @@ function renderizarGastosTarjeta() {
   labelTotalCiclo.textContent = formatearMoneda(total.Actual);
   labelTotalProx.textContent = formatearMoneda(total.Próximo);
 }
+   function actualizarResumenGeneral() {
+   const totalC = gastos
+    .filter(g => g.cicloAsignado === 'Actual')
+    .reduce((sum, g) => sum + g.montoCuota, 0);
+
+   const totalP = gastos
+    .filter(g => g.cicloAsignado === 'Próximo')
+    .reduce((sum, g) => sum + g.montoCuota, 0);
+
+   labelTotalCiclo.textContent = formatearMoneda(totalC);
+   labelTotalProx.textContent  = formatearMoneda(totalP);
+}
 
 // Listener para eliminar un gasto al hacer clic en el botón
 tbodyGastos.addEventListener('click', e => {
@@ -132,6 +130,7 @@ tbodyGastos.addEventListener('click', e => {
     gastos = gastos.filter(g => g.id !== id);
     localStorage.setItem('gastos', JSON.stringify(gastos));
     renderizarGastosTarjeta();
+    actualizarResumenGeneral();
   }
 });
 
@@ -158,6 +157,7 @@ tbodyGastos.addEventListener('click', e => {
 
     tarjetas.push({ id: Date.now(), entidad, alias, diaCierre });
     renderTarjetas();
+    actualizarResumenGeneral();
     inputEntidad.value = '';
     inputAlias.value = '';
     inputCierre.value = '';
@@ -176,6 +176,7 @@ tbodyGastos.addEventListener('click', e => {
     gastos = gastos.filter(g => g.tarjetaId !== id);
     renderTarjetas();
     renderizarGastosTarjeta();
+    actualizarResumenGeneral();
   });
 
   // 10. Guardar Gasto
@@ -216,6 +217,7 @@ tbodyGastos.addEventListener('click', e => {
     gastos.push(gasto);
     localStorage.setItem('gastos', JSON.stringify(gastos));
     renderizarGastosTarjeta();
+    actualizarResumenGeneral();
 
     selectTarjG.value = '';
     inputFecha.value = '';
@@ -228,4 +230,5 @@ tbodyGastos.addEventListener('click', e => {
   // 11. Inicializar app
   renderTarjetas();
   renderizarGastosTarjeta();
+  actualizarResumenGeneral();
 });
