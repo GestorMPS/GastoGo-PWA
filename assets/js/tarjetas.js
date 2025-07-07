@@ -47,7 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return { inicio, fin: cierreAct };
   }
 
-
   // 4. Renderizar Tarjetas y Combo
   function renderTarjetas() {
     ulTarjetas.innerHTML = '';
