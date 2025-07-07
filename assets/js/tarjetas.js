@@ -98,10 +98,12 @@ function renderizarGastosTarjeta() {
     tbodyGastos.appendChild(tr);
 
     // Acumulamos cada cuota en su ciclo
-    let vencimiento = new Date(g.primerVencimiento);
+  let vencimiento = new Date(g.primerVencimiento);
 
 for (let i = 0; i < g.cuotasPendientes; i++) {
-  const vencimiento = new Date(g.primerVencimiento);
+  const cicloActual = calcularCiclos(tarjeta.diaCierre, vencimiento);
+  const inicio = cicloActual.inicio;
+  const fin = cicloActual.fin;
 
   if (vencimiento >= inicio && vencimiento <= fin) {
     totalActual += g.montoCuota;
@@ -110,10 +112,9 @@ for (let i = 0; i < g.cuotasPendientes; i++) {
     totalProximo += g.montoCuota;
     console.log(`➡ Cuota ${i + 1} de "${g.detalle}" al ciclo PRÓXIMO. Vence: ${vencimiento.toLocaleDateString('es-AR')}`);
   }
-}
 
-      // Próximo mes
-      vencimiento.setMonth(vencimiento.getMonth() + 1);
+  // Avanzamos al próximo mes para la siguiente cuota
+  vencimiento.setMonth(vencimiento.getMonth() + 1);
   });
 
   labelTotalCiclo.textContent = formatearMoneda(totalActual);
