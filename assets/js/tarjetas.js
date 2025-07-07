@@ -102,11 +102,14 @@ function renderizarGastosTarjeta() {
     for (let i = 0; i < g.cuotasPendientes; i++) {
       const { inicio, fin } = calcularCiclos(tarjeta.diaCierre);
 
-      if (vencimiento >= inicio && vencimiento <= fin) {
-        totalActual += g.montoCuota;
-      } else {
-        totalProximo += g.montoCuota;
-      }
+   if (vencimiento >= inicio && vencimiento <= fin) {
+     totalActual += g.montoCuota;
+     console.log(`Cuota ${i+1} de ${g.detalle} va al ciclo ACTUAL - Vencimiento: ${vencimiento.toLocaleDateString('es-AR')}`);
+   } else {
+     totalProximo += g.montoCuota;
+     console.log(`Cuota ${i+1} de ${g.detalle} va al ciclo PRÓXIMO - Vencimiento: ${vencimiento.toLocaleDateString('es-AR')}`);
+   }
+
 
       // Próximo mes
       vencimiento.setMonth(vencimiento.getMonth() + 1);
