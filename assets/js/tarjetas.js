@@ -38,15 +38,15 @@ document.addEventListener('DOMContentLoaded', () => {
     return new Date(añoVto, mesVto, diaCierre);
   }
 
-  function calcularCiclos(diaCierre) {
-    const hoy = new Date();
-    let cierreAct = new Date(hoy.getFullYear(), hoy.getMonth(), diaCierre);
-    if (hoy.getDate() > diaCierre) cierreAct.setMonth(cierreAct.getMonth() + 1);
+  function calcularCiclos(diaCierre, referencia = new Date()) {
+    let cierreAct = new Date(referencia.getFullYear(), referencia.getMonth(), diaCierre);
+    if (referencia.getDate() > diaCierre) cierreAct.setMonth(cierreAct.getMonth() + 1);
     const cierreAnt = new Date(cierreAct);
     cierreAnt.setMonth(cierreAct.getMonth() - 1);
     const inicio = new Date(cierreAnt); inicio.setDate(inicio.getDate() + 1);
     return { inicio, fin: cierreAct };
   }
+
 
   // 4. Renderizar Tarjetas y Combo
   function renderTarjetas() {
@@ -77,8 +77,6 @@ function renderizarGastosTarjeta() {
   let totalCicloActual = 0;
   let totalCicloProximo = 0;
 
-  const hoy = new Date();
-
   gastos.forEach(g => {
     const tarjeta = tarjetas.find(t => t.id === g.tarjetaId);
     if (!tarjeta) return;
@@ -96,23 +94,25 @@ function renderizarGastosTarjeta() {
     `;
     tbodyGastos.appendChild(tr);
 
-    // Sumar las cuotas al ciclo actual y siguientes
+    // Para cada cuota pendiente, calcular su vencimiento y ver en qué ciclo cae
     for (let i = 0; i < g.cuotasPendientes; i++) {
       const vencimiento = new Date(g.primerVencimiento);
       vencimiento.setMonth(vencimiento.getMonth() + i);
 
-      const { inicio, fin } = calcularCiclos(tarjeta.diaCierre);
+      const { inicio, fin } = calcularCiclos(tarjeta.diaCierre, vencimiento);
+
       if (vencimiento >= inicio && vencimiento <= fin) {
         totalCicloActual += g.montoCuota;
-      } else if (vencimiento > fin) {
+      } else {
         totalCicloProximo += g.montoCuota;
       }
     }
   });
 
   labelTotalCiclo.textContent = formatearMoneda(totalCicloActual);
-  labelTotalProx.textContent = formatearMoneda(totalCicloProximo);
+  labelTotalProx.textContent  = formatearMoneda(totalCicloProximo);
 }
+
 
    function actualizarResumenGeneral() {
    const totalC = gastos
