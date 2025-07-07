@@ -85,6 +85,7 @@ function renderizarGastosTarjeta() {
     tr.innerHTML = `
       <td>${g.fechaCompra}</td>
       <td>${g.detalle}</td>
+      <td>${tarjeta.alias}</td>
       <td>${g.cuotasPendientes}</td>
       <td>${formatearMoneda(g.montoCuota)}</td>
       <td>${new Date(g.primerVencimiento).toLocaleDateString('es-AR')}</td>
@@ -93,17 +94,15 @@ function renderizarGastosTarjeta() {
     `;
     tbodyGastos.appendChild(tr);
     
-    console.log('ciclo:', g.cicloAsignado, 'monto:', g.montoCuota);
+    //console.log('ciclo:', g.cicloAsignado, 'monto:', g.montoCuota);
 
     if (g.cicloAsignado === 'Actual') {
     total.Actual += g.montoCuota;
   } else if (g.cicloAsignado === 'Próximo') {
     total.Próximo += g.montoCuota;
   }
-
     //total[g.cicloAsignado] += g.montoCuota;
   });
-
   labelTotalCiclo.textContent = formatearMoneda(total.Actual);
   labelTotalProx.textContent = formatearMoneda(total.Próximo);
 }
