@@ -117,8 +117,6 @@ function renderizarGastosTarjeta() {
   labelTotalProx.textContent = formatearMoneda(totalProximo);
 }
 
-
-
    function actualizarResumenGeneral() {
    const totalC = gastos
     .filter(g => g.cicloAsignado === 'Actual')
@@ -144,7 +142,7 @@ tbodyGastos.addEventListener('click', e => {
     gastos = gastos.filter(g => g.id !== id);
     localStorage.setItem('gastos', JSON.stringify(gastos));
     renderizarGastosTarjeta();
-    actualizarResumenGeneral();
+    //actualizarResumenGeneral();
   }
 });
 
@@ -171,7 +169,7 @@ tbodyGastos.addEventListener('click', e => {
 
     tarjetas.push({ id: Date.now(), entidad, alias, diaCierre });
     renderTarjetas();
-    actualizarResumenGeneral();
+    //actualizarResumenGeneral();
     inputEntidad.value = '';
     inputAlias.value = '';
     inputCierre.value = '';
@@ -190,7 +188,7 @@ tbodyGastos.addEventListener('click', e => {
     gastos = gastos.filter(g => g.tarjetaId !== id);
     renderTarjetas();
     renderizarGastosTarjeta();
-    actualizarResumenGeneral();
+    //actualizarResumenGeneral();
   });
 
   // 10. Guardar Gasto
@@ -231,7 +229,7 @@ tbodyGastos.addEventListener('click', e => {
     gastos.push(gasto);
     localStorage.setItem('gastos', JSON.stringify(gastos));
     renderizarGastosTarjeta();
-    actualizarResumenGeneral();
+    //actualizarResumenGeneral();
 
     selectTarjG.value = '';
     inputFecha.value = '';
@@ -244,5 +242,5 @@ tbodyGastos.addEventListener('click', e => {
   // 11. Inicializar app
   renderTarjetas();
   renderizarGastosTarjeta();
-  actualizarResumenGeneral();
+  //actualizarResumenGeneral();
 });
