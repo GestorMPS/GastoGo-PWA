@@ -73,13 +73,16 @@ function renderizarGastosTarjeta() {
   if (!tbodyGastos || !labelTotalCiclo || !labelTotalProx) return;
 
   tbodyGastos.innerHTML = '';
-  let totalCicloActual = 0;
-  let totalCicloProximo = 0;
+  let totalActual = 0;
+  let totalProximo = 0;
+
+  const hoy = new Date();
 
   gastos.forEach(g => {
     const tarjeta = tarjetas.find(t => t.id === g.tarjetaId);
     if (!tarjeta) return;
 
+    // Render fila única del gasto (como venía)
     const tr = document.createElement('tr');
     tr.dataset.id = g.id;
     tr.innerHTML = `
@@ -93,24 +96,27 @@ function renderizarGastosTarjeta() {
     `;
     tbodyGastos.appendChild(tr);
 
-    // Para cada cuota pendiente, calcular su vencimiento y ver en qué ciclo cae
-    for (let i = 0; i < g.cuotasPendientes; i++) {
-      const vencimiento = new Date(g.primerVencimiento);
-      vencimiento.setMonth(vencimiento.getMonth() + i);
+    // Acumulamos cada cuota en su ciclo
+    let vencimiento = new Date(g.primerVencimiento);
 
-      const { inicio, fin } = calcularCiclos(tarjeta.diaCierre, vencimiento);
+    for (let i = 0; i < g.cuotasPendientes; i++) {
+      const { inicio, fin } = calcularCiclos(tarjeta.diaCierre);
 
       if (vencimiento >= inicio && vencimiento <= fin) {
-        totalCicloActual += g.montoCuota;
+        totalActual += g.montoCuota;
       } else {
-        totalCicloProximo += g.montoCuota;
+        totalProximo += g.montoCuota;
       }
+
+      // Próximo mes
+      vencimiento.setMonth(vencimiento.getMonth() + 1);
     }
   });
 
-  labelTotalCiclo.textContent = formatearMoneda(totalCicloActual);
-  labelTotalProx.textContent  = formatearMoneda(totalCicloProximo);
+  labelTotalCiclo.textContent = formatearMoneda(totalActual);
+  labelTotalProx.textContent = formatearMoneda(totalProximo);
 }
+
 
 
    function actualizarResumenGeneral() {
