@@ -30,6 +30,20 @@ document.addEventListener('DOMContentLoaded', () => {
     return symbol + Number(valor).toLocaleString(locale, { minimumFractionDigits: 2 });
   }
 
+  function actualizarResumenGeneral() {
+   const totalC = gastos
+    .filter(g => g.cicloAsignado === 'Actual')
+    .reduce((sum, g) => sum + g.montoCuota, 0);
+
+   const totalP = gastos
+    .filter(g => g.cicloAsignado === 'Próximo')
+    .reduce((sum, g) => sum + g.montoCuota, 0);
+
+   labelTotalCiclo.textContent = formatearMoneda(totalC);
+   labelTotalProx.textContent  = formatearMoneda(totalP);
+}
+
+  
   function calcularPrimerVencimiento(fechaCompraISO, diaCierre) {
     const compra = new Date(fechaCompraISO);
     let mesVto = compra.getDate() <= diaCierre ? compra.getMonth() + 1 : compra.getMonth() + 2;
@@ -85,7 +99,6 @@ function renderizarGastosTarjeta() {
     tr.innerHTML = `
       <td>${g.fechaCompra}</td>
       <td>${g.detalle}</td>
-      <td>${tarjeta.alias}</td>
       <td>${g.cuotasPendientes}</td>
       <td>${formatearMoneda(g.montoCuota)}</td>
       <td>${new Date(g.primerVencimiento).toLocaleDateString('es-AR')}</td>
