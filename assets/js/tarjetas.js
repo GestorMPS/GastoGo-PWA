@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const inputDet = document.getElementById('input-detalle-gasto');
   const inputCuo = document.getElementById('input-cuotas-gasto');
   const btnGuardarGasto = document.getElementById('btn-guardar-gasto-tarjeta');
-  const btnPagarTarjeta = document.getElementById('btn-pagar-tarjeta');
 
   const tbodyGastos = document.querySelector('#tabla-gastos-tarjeta tbody');
   const labelTotalCiclo = document.getElementById('label-total-ciclo');
@@ -256,39 +255,36 @@ tbodyGastos.addEventListener('click', e => {
   });
   
   // 12. Botón "Pagar tarjeta"
-document.getElementById('btn-pagar-tarjeta')?.addEventListener('click', () => {
-  if (!confirm('¿Confirmás que vas a pagar la tarjeta? Esto actualizará los ciclos y cuotas pendientes.')) return;
+const btnPagarTarjeta = document.getElementById('btn-pagar-tarjeta');
+btnPagarTarjeta.addEventListener('click', () => {
+  if (!confirm('¿Confirmás que ya pagaste tu tarjeta? Esto ajustará las cuotas pendientes.')) return;
 
   const hoy = new Date();
 
-  gastos = gastos.flatMap(g => {
-    const nuevasCuotas = [];
+  gastos = gastos.map(g => {
+    // Si ya no tiene más cuotas, lo dejamos igual
+    if (g.cuotasPendientes <= 1) return null;
+
+    const nuevaCuotas = g.cuotasPendientes - 1;
+    const nuevoPrimerVto = new Date(g.primerVencimiento);
+    nuevoPrimerVto.setMonth(nuevoPrimerVto.getMonth() + 1);
+
     const tarjeta = tarjetas.find(t => t.id === g.tarjetaId);
-    if (!tarjeta) return [];
+    const nuevoCiclo = calcularCicloParaVencimiento(nuevoPrimerVto, tarjeta.diaCierre);
 
-    // Reducir una cuota pendiente (por pago)
-    if (g.cuotasPendientes > 1) {
-      // Avanzamos el primer vencimiento un mes
-      const nuevoVencimiento = new Date(g.primerVencimiento);
-      nuevoVencimiento.setMonth(nuevoVencimiento.getMonth() + 1);
-
-      nuevasCuotas.push({
-        ...g,
-        cuotasPendientes: g.cuotasPendientes - 1,
-        primerVencimiento: nuevoVencimiento.toISOString(),
-        cicloAsignado: calcularCicloParaVencimiento(nuevoVencimiento, tarjeta.diaCierre)
-      });
-    } else if (g.cuotasPendientes === 1) {
-      // Última cuota ya fue pagada, no se incluye
-    }
-
-    return nuevasCuotas;
-  });
+    return {
+      ...g,
+      cuotasPendientes: nuevaCuotas,
+      primerVencimiento: nuevoPrimerVto.toISOString(),
+      cicloAsignado: nuevoCiclo
+    };
+  }).filter(g => g !== null); // Quitamos los gastos ya pagados totalmente
 
   localStorage.setItem('gastos', JSON.stringify(gastos));
   renderizarGastosTarjeta();
   actualizarResumenGeneral();
 });
+
 
  // 11. Inicializar app
   renderTarjetas();
