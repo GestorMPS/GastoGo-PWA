@@ -1,9 +1,18 @@
-
 document.addEventListener('DOMContentLoaded', function () {
   // Referencias a elementos de “Meses”
   const contenedorTabla = document.getElementById('contenedor-meses-tabla');
   const tablaMesesBody = document.querySelector('#tabla-meses tbody');
   const mensajeSinMeses = document.getElementById('mensaje-sin-meses');
+  const btnBorrarHistorial = document.getElementById('btn-borrar-historial');
+
+  btnBorrarHistorial.addEventListener('click', () => {
+    if (confirm('¿Seguro que querés borrar todo el historial de gastos? Esta acción no se puede deshacer.')) {
+      localStorage.removeItem('gastos');
+      gastos = [];
+      renderizarGastosTarjeta();
+      actualizarResumenGeneral();
+    }
+});
 
   // Array que almacenará los meses finalizados
   // Cada objeto tendrá: { mes: 'Junio 2025', totalIngresos: 50000, totalGastos: 32000, saldoFinal: 18000 }
