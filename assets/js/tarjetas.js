@@ -252,42 +252,36 @@ tbodyGastos.addEventListener('click', e => {
   });
   
   btnPagarTarjeta.addEventListener('click', () => {
-  const confirmar = confirm('¿Confirmás el pago de la tarjeta? Esto actualizará los ciclos y cuotas restantes.');
-  if (!confirmar) return;
+  if (!confirm('¿Confirmás el pago del ciclo actual? Se actualizarán las cuotas.')) return;
 
   const hoy = new Date();
 
-  gastos = gastos.flatMap(gasto => {
-    if (gasto.cuotasPendientes <= 1) {
-      // Se pagó la última cuota
-      return [];
+  gastos = gastos.flatMap(g => {
+    if (g.cuotasPendientes <= 1) {
+      return []; // Eliminar gasto si ya pagó la última cuota
     }
 
-    // Reducir cuota y calcular nuevo vencimiento
-    const nuevaCuotaPendiente = gasto.cuotasPendientes - 1;
-    const nuevoPrimerVencimiento = new Date(gasto.primerVencimiento);
-    nuevoPrimerVencimiento.setMonth(nuevoPrimerVencimiento.getMonth() + 1);
+    const nuevaCuota = g.cuotasPendientes - 1;
+    const nuevoVto = new Date(g.primerVencimiento);
+    nuevoVto.setMonth(nuevoVto.getMonth() + 1);
 
-    const tarjeta = tarjetas.find(t => t.id === gasto.tarjetaId);
+    const tarjeta = tarjetas.find(t => t.id === g.tarjetaId);
     const { inicio, fin } = calcularCiclos(tarjeta.diaCierre, hoy);
-    const nuevoCiclo = (nuevoPrimerVencimiento >= inicio && nuevoPrimerVencimiento <= fin) ? 'Actual' : 'Próximo';
+    const nuevoCiclo = (nuevoVto >= inicio && nuevoVto <= fin) ? 'Actual' : 'Próximo';
 
     return [{
-      ...gasto,
-      cuotasPendientes: nuevaCuotaPendiente,
-      primerVencimiento: nuevoPrimerVencimiento.toISOString(),
+      ...g,
+      cuotasPendientes: nuevaCuota,
+      primerVencimiento: nuevoVto.toISOString(),
       cicloAsignado: nuevoCiclo
     }];
   });
 
   localStorage.setItem('gastos', JSON.stringify(gastos));
   renderizarGastosTarjeta();
-  actualizarResumenGeneral();
 });
 
-
-
-  // 11. Inicializar app
+ // 11. Inicializar app
   renderTarjetas();
   renderizarGastosTarjeta();
   //actualizarResumenGeneral();
