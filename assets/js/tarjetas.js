@@ -16,10 +16,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const inputDet = document.getElementById('input-detalle-gasto');
   const inputCuo = document.getElementById('input-cuotas-gasto');
   const btnGuardarGasto = document.getElementById('btn-guardar-gasto-tarjeta');
-  
+  const btnPagarTarjeta = document.getElementById('btn-pagar-tarjeta');
+
   const tbodyGastos = document.querySelector('#tabla-gastos-tarjeta tbody');
   const labelTotalCiclo = document.getElementById('label-total-ciclo');
   const labelTotalProx = document.getElementById('label-total-prox-ciclo');
+  
 
   // 3. Utilidades
   function formatearMoneda(valor) {
@@ -249,31 +251,31 @@ tbodyGastos.addEventListener('click', e => {
     btnGuardarGasto.disabled = true;
   });
   
-  document.getElementById('btn-pagar-tarjeta').addEventListener('click', () => {
-  const confirmar = confirm('¿Deseás cerrar el ciclo actual y avanzar todas las cuotas un mes?');
+  btnPagarTarjeta.addEventListener('click', () => {
+  const confirmar = confirm('¿Confirmás el pago de la tarjeta? Esto actualizará los ciclos y cuotas restantes.');
   if (!confirmar) return;
 
   const hoy = new Date();
 
   gastos = gastos.flatMap(gasto => {
-    const nuevasCuotas = gasto.cuotasPendientes - 1;
-    if (nuevasCuotas <= 0) return []; // Gasto pagado por completo
+    if (gasto.cuotasPendientes <= 1) {
+      // Se pagó la última cuota
+      return [];
+    }
 
-    const nuevoVto = new Date(gasto.primerVencimiento);
-    nuevoVto.setMonth(nuevoVto.getMonth() + 1);
+    // Reducir cuota y calcular nuevo vencimiento
+    const nuevaCuotaPendiente = gasto.cuotasPendientes - 1;
+    const nuevoPrimerVencimiento = new Date(gasto.primerVencimiento);
+    nuevoPrimerVencimiento.setMonth(nuevoPrimerVencimiento.getMonth() + 1);
 
-    // Buscar tarjeta asociada
     const tarjeta = tarjetas.find(t => t.id === gasto.tarjetaId);
-    if (!tarjeta) return [];
-
-    // Recalcular ciclos con fecha actual
     const { inicio, fin } = calcularCiclos(tarjeta.diaCierre, hoy);
-    const nuevoCiclo = (nuevoVto >= inicio && nuevoVto <= fin) ? 'Actual' : 'Próximo';
+    const nuevoCiclo = (nuevoPrimerVencimiento >= inicio && nuevoPrimerVencimiento <= fin) ? 'Actual' : 'Próximo';
 
     return [{
       ...gasto,
-      cuotasPendientes: nuevasCuotas,
-      primerVencimiento: nuevoVto.toISOString(),
+      cuotasPendientes: nuevaCuotaPendiente,
+      primerVencimiento: nuevoPrimerVencimiento.toISOString(),
       cicloAsignado: nuevoCiclo
     }];
   });
@@ -282,6 +284,7 @@ tbodyGastos.addEventListener('click', e => {
   renderizarGastosTarjeta();
   actualizarResumenGeneral();
 });
+
 
 
   // 11. Inicializar app
