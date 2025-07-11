@@ -248,6 +248,41 @@ tbodyGastos.addEventListener('click', e => {
     inputCuo.value = '';
     btnGuardarGasto.disabled = true;
   });
+  document.getElementById('btn-pagar-tarjeta').addEventListener('click', () => {
+  const confirmar = confirm('¿Deseás procesar el pago de la tarjeta y avanzar las cuotas un mes?');
+  if (!confirmar) return;
+
+  const hoy = new Date();
+
+  gastos = gastos.flatMap(gasto => {
+    // Reducir una cuota
+    const nuevasCuotas = gasto.cuotasPendientes - 1;
+
+    if (nuevasCuotas <= 0) {
+      return []; // Se eliminan gastos sin cuotas
+    }
+
+    // Nuevo primer vencimiento
+    const nuevoVto = new Date(gasto.primerVencimiento);
+    nuevoVto.setMonth(nuevoVto.getMonth() + 1);
+
+    // Buscar el cierre actualizado para recalcular el ciclo
+    const tarjeta = tarjetas.find(t => t.id === gasto.tarjetaId);
+    const { inicio, fin } = calcularCiclos(tarjeta.diaCierre, hoy);
+    const nuevoCiclo = (nuevoVto >= inicio && nuevoVto <= fin) ? 'Actual' : 'Próximo';
+
+    return [{
+      ...gasto,
+      cuotasPendientes: nuevasCuotas,
+      primerVencimiento: nuevoVto.toISOString(),
+      cicloAsignado: nuevoCiclo
+    }];
+  });
+
+  localStorage.setItem('gastos', JSON.stringify(gastos));
+  renderizarGastosTarjeta();
+  actualizarResumenGeneral();
+});
 
   // 11. Inicializar app
   renderTarjetas();
